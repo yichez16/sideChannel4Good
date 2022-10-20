@@ -216,7 +216,7 @@ free(C);
 
 int main()  
 {
-// freopen(path_0,"w",stdout);
+freopen(path_0,"w",stdout);
 
 using namespace std;
 CUdevice device;
@@ -241,7 +241,7 @@ const auto metric_names = cupti_profiler::available_metrics(device);
 
   };
   vector<string> metric_names {
-//"l2_read_transactions",// works
+"l2_read_transactions",// works
 //"nvlink_data_receive_efficiency",
 // "nvlink_data_transmission_efficiency",
 //"nvlink_overhead_data_received",
@@ -295,7 +295,7 @@ for(int i=0;i<100;i++)
 	p->stop();
 	gettimeofday(&te,NULL);
 
-	p->print_event_values(std::cout,ts,te);
+	// p->print_event_values(std::cout,ts,te);
 	p->print_metric_values(std::cout,ts,te);
 	// p->print_events_and_metrics(std::cout);
 
@@ -312,7 +312,7 @@ for(int i=0;i<100;i++)
 	p->stop();
 	gettimeofday(&te,NULL);
 
-	p->print_event_values(std::cout,ts,te);
+	// p->print_event_values(std::cout,ts,te);
 	p->print_metric_values(std::cout,ts,te);
 
 
@@ -322,6 +322,6 @@ for(int i=0;i<100;i++)
 
 
   
-// fclose(stdout);
+fclose(stdout);
 return 0;
 }
