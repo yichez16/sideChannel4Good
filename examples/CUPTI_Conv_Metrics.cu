@@ -348,9 +348,9 @@ CUcontext context;
 cuCtxCreate(&context, 0, 0);
 
 
-for(int i=0;i<30;i++)
+for(int i=0;i<50;i++)
 {
-	for(int j=0;j<100;j++)
+	for(int j=0;j<25;j++)
 	{
 	cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
 	struct timeval ts,te;
@@ -362,12 +362,14 @@ for(int i=0;i<30;i++)
 	p->stop();
 	gettimeofday(&te,NULL);
 
-	p->print_event_values(std::cout,ts,te);
-	p->print_metric_values(std::cout,ts,te);
+	// p->print_event_values(std::cout,ts,te);
+	// p->print_metric_values(std::cout,ts,te);
 	// p->print_events_and_metrics(std::cout);
 
 	
 	}
+  for(int m=0;m<0;j++)
+	{
 	cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
 	struct timeval ts,te;
 	p->start();
@@ -384,7 +386,7 @@ for(int i=0;i<30;i++)
 	p->print_event_values(std::cout,ts,te);
 	p->print_metric_values(std::cout,ts,te);
 
-
+  }
 	// free(p);
 }
 
