@@ -250,9 +250,9 @@ const auto metric_names = cupti_profiler::available_metrics(device);
 // "inst_control",
 // "inst_fp_32",
 // "inst_fp_64",
-"inst_integer",
+// "inst_integer",
 "inst_issued",
-"inst_per_warp",
+// "inst_per_warp",
 
 
 //  "nvlink_total_data_received",// works
