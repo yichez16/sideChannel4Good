@@ -363,7 +363,7 @@ for(int i=0;i<50;i++)
 	gettimeofday(&te,NULL);
 
 	// p->print_event_values(std::cout,ts,te);
-	// p->print_metric_values(std::cout,ts,te);
+	p->print_metric_values(std::cout,ts,te);
 	// p->print_events_and_metrics(std::cout);
 
 	
@@ -383,7 +383,7 @@ for(int i=0;i<50;i++)
 	p->stop();
 	gettimeofday(&te,NULL);
 
-	p->print_event_values(std::cout,ts,te);
+	// p->print_event_values(std::cout,ts,te);
 	p->print_metric_values(std::cout,ts,te);
 
   }
