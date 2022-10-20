@@ -350,7 +350,7 @@ cuCtxCreate(&context, 0, 0);
 
 for(int i=0;i<30;i++)
 {
-	for(int j=0;j<50;j++)
+	for(int j=0;j<25;j++)
 	{
 	cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
 	struct timeval ts,te;
