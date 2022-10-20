@@ -364,7 +364,7 @@ for(int i=0;i<30;i++)
 	p->print_event_values(std::cout,ts,te);
 	p->print_metric_values(std::cout,ts,te);
 	// p->print_events_and_metrics(std::cout);
-
+		
 	
 	}
 	// cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
