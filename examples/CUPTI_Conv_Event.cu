@@ -357,6 +357,7 @@ for(int i=0;i<100;i++)
 	gettimeofday(&ts,NULL);
 	
 	compute_mat();
+	compute_vecmul();
 	p->stop();
 	gettimeofday(&te,NULL);
 
