@@ -216,7 +216,7 @@ free(C);
 
 int main()  
 {
-// freopen(path_0,"w",stdout);
+freopen(path_0,"w",stdout);
 
 using namespace std;
 CUdevice device;
@@ -241,7 +241,7 @@ const auto metric_names = cupti_profiler::available_metrics(device);
 
   };
   vector<string> metric_names {
-"l2_read_transactions",// works
+// "l2_read_transactions",// works
 //"nvlink_data_receive_efficiency",
 // "nvlink_data_transmission_efficiency",
 //"nvlink_overhead_data_received",
@@ -270,7 +270,7 @@ const auto metric_names = cupti_profiler::available_metrics(device);
 // "nvlink_user_write_data_transmitted",
 
 // "l2_write_transactions",  // error
-//"dram_read_transactions",
+"dram_read_transactions",
 //"dram_write_transactions",
 
                     
@@ -282,46 +282,46 @@ CUcontext context;
 cuCtxCreate(&context, 0, 0);
 
 
-for(int i=0;i<1000;i++)
+for(int i=0;i<100;i++)
 {
 	for(int j=0;j<10;j++)
 	{
-	// cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
-	// struct timeval ts,te;
-	// p->start();
-	// gettimeofday(&ts,NULL);
+	cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
+	struct timeval ts,te;
+	p->start();
+	gettimeofday(&ts,NULL);
 	
 	compute();
-	// p->stop();
-	// gettimeofday(&te,NULL);
+	p->stop();
+	gettimeofday(&te,NULL);
 
-	// // p->print_event_values(std::cout,ts,te);
-	// p->print_metric_values(std::cout,ts,te);
+	p->print_event_values(std::cout,ts,te);
+	p->print_metric_values(std::cout,ts,te);
 	// p->print_events_and_metrics(std::cout);
 
 	
 	}
-	// cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
-	// struct timeval ts,te;
-	// p->start();
-	// gettimeofday(&ts,NULL);
+	cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
+	struct timeval ts,te;
+	p->start();
+	gettimeofday(&ts,NULL);
 	
 	compute();
 	compute_mat();
 
-	// p->stop();
-	// gettimeofday(&te,NULL);
+	p->stop();
+	gettimeofday(&te,NULL);
 
-	// // p->print_event_values(std::cout,ts,te);
-	// p->print_metric_values(std::cout,ts,te);
+	p->print_event_values(std::cout,ts,te);
+	p->print_metric_values(std::cout,ts,te);
 
 
-	// free(p);
+	free(p);
 }
 
 
 
   
-// fclose(stdout);
+fclose(stdout);
 return 0;
 }
