@@ -317,7 +317,7 @@ const auto metric_names = cupti_profiler::available_metrics(device);
 // "inst_fp_64",
 // "inst_integer",
 "inst_executed",
-"inst_issued",
+// "inst_issued",
 // "inst_per_warp",
 
 
