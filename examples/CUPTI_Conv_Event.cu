@@ -13,7 +13,7 @@
 #include <stdlib.h>
 
 const char *path_0 = "conv_event.csv";
-#define N 128 //Default matrix size NxN
+#define N 1024 //Default matrix size NxN
 #define A(i,j) A[(i)*cols+(j)]  // row-major layout
 #define C(i,j) C[(i)*cols+(j)]  // row-major layout
 #define PROFILE_ALL_EVENTS_METRICS 0
@@ -356,7 +356,7 @@ for(int i=0;i<100;i++)
 	p->start();
 	gettimeofday(&ts,NULL);
 	
-	compute();
+	compute_mat();
 	p->stop();
 	gettimeofday(&te,NULL);
 
@@ -372,8 +372,8 @@ for(int i=0;i<100;i++)
 	gettimeofday(&ts,NULL);
 	
 	compute();
-	compute_mat();
-	compute_vecmul();
+	// compute_mat();
+	// compute_vecmul();
 
 
 	p->stop();
