@@ -185,6 +185,8 @@ for(int i=0;i<10;i++)
 
 	
 	}
+	cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
+	struct timeval ts,te;
 	p->start();
 	gettimeofday(&ts,NULL);
 	
