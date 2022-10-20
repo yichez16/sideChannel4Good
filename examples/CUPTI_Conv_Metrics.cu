@@ -236,6 +236,7 @@ const auto metric_names = cupti_profiler::available_metrics(device);
 //     "l2_subp0_read_sector_misses",
 //     // "l2_subp1_read_sector_misses",
 //      "l2_subp0_write_sector_misses",
+//     // "l2_subp1_write_sector_misses"
 
 
 
@@ -251,7 +252,7 @@ const auto metric_names = cupti_profiler::available_metrics(device);
 // "inst_fp_32",
 // "inst_fp_64",
 // "inst_integer",
-"inst_issued",
+// "inst_issued",
 // "inst_per_warp",
 
 
@@ -270,7 +271,7 @@ const auto metric_names = cupti_profiler::available_metrics(device);
 // "nvlink_user_write_data_transmitted",
 
 // "l2_write_transactions",  // error
-"dram_read_transactions",
+// "dram_read_transactions",
 //"dram_write_transactions",
 
                     

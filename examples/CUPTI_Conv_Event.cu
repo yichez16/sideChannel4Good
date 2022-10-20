@@ -12,13 +12,16 @@
 #include "device_launch_parameters.h"
 #include <stdlib.h>
 
-const char *path_0 = "conv_event.csv";
+const char *path_0 = "conv_metrics.csv";
 #define N 128 //Default matrix size NxN
 #define A(i,j) A[(i)*cols+(j)]  // row-major layout
 #define C(i,j) C[(i)*cols+(j)]  // row-major layout
 #define PROFILE_ALL_EVENTS_METRICS 0
 int counter1 = 200000;
 
+int numARows = 100;
+int numACols = 100;
+int numBCols = 100;
 
 __global__ void convolution(int *A, int *C)
 {
@@ -27,6 +30,7 @@ __global__ void convolution(int *A, int *C)
 
 	//Needs for row-major layout
 	int cols = N + 2;
+	//int i = blockIdx.y * blockDim.y + threadIdx.y;
 	int i = blockIdx.x * blockDim.x + threadIdx.x;
 
 	int threadBlockSize = (N+2)/ blockDim.x;//The amount of processing per thread
@@ -54,7 +58,92 @@ __global__ void convolution(int *A, int *C)
 		}
 	}
 
+
 }
+
+__global__ void matMul(float* A, float* B, float* C, int numARows, int numACols, int numBCols) {
+    // compute global thread coordinates
+    int row = blockIdx.y * blockDim.y + threadIdx.y;
+    int col = blockIdx.x * blockDim.x + threadIdx.x;
+
+    // linearize coordinates for data access
+    int offset = row * numBCols + col;
+
+    if ((row < numARows) && (col < numBCols)) {
+        float cumSum = 0;
+        for (int k = 0; k < numACols; k++) {
+            cumSum += A[row*numACols + k] * B[k*numBCols + col];
+        }
+        C[offset] = cumSum;
+    }
+}
+
+
+
+
+static void compute_mat() {
+
+    cudaEvent_t start, stop;
+    cudaEventCreate(&start);
+    cudaEventCreate(&stop);
+
+    size_t sizeA = numARows * numACols * sizeof(float);
+    size_t sizeB = numACols * numBCols * sizeof(float);
+    size_t sizeC = numARows * numBCols * sizeof(float);
+
+    // allocate host memory
+    float* h_A = (float*)malloc(sizeA);
+    float* h_B = (float*)malloc(sizeB);
+    float* h_C = (float*)malloc(sizeC);
+
+    // initialize host matrices
+    int i, j, offset;
+    for (i = 0; i <  numARows; i++) {
+        for (j = 0; j < numACols; j++) {
+            offset = i*numACols + j;
+            h_A[offset] = i;
+        }
+    }
+    for (i = 0; i <  numACols; i++) {
+        for (j = 0; j < numBCols; j++) {
+            offset = i*numBCols + j;
+            h_B[offset] = i;
+        }
+    }
+
+    // allocate device matrices
+    float* d_A;
+    float* d_B;
+    float* d_C;
+    cudaMalloc((void**)&d_A, sizeA);
+    cudaMalloc((void**)&d_B, sizeB);
+    cudaMalloc((void**)&d_C, sizeC);
+
+    // transfer to GPU
+    cudaMemcpy(d_A, h_A, sizeA, cudaMemcpyHostToDevice);
+    cudaMemcpy(d_B, h_B, sizeB, cudaMemcpyHostToDevice);
+
+    // kernel launch
+    
+
+    // dim3 threadPerBlock(BLOCK_SIZE, BLOCK_SIZE, 1);
+    // dim3 blockPerGrid(ceil(numBCols/(float)BLOCK_SIZE), ceil(numACols/(float)BLOCK_SIZE), 1);
+
+
+    cudaEventRecord(start);
+    matMul<<<1,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
+    cudaEventRecord(stop);
+    cudaEventSynchronize(stop);
+
+
+    cudaMemcpy(h_C, d_C, sizeC, cudaMemcpyDeviceToHost);
+
+
+    free(h_A); free(h_B); free(h_C); 
+    cudaFree(d_A); cudaFree(d_B); cudaFree(d_C);
+
+}
+
 
 
 static void compute()
@@ -131,8 +220,6 @@ freopen(path_0,"w",stdout);
 
 using namespace std;
 CUdevice device;
-// cudaSetDevice (device_id);
-
 
 DRIVER_API_CALL(cuInit(0));
 DRIVER_API_CALL(cuDeviceGet(&device, 0));
@@ -141,7 +228,7 @@ DRIVER_API_CALL(cuDeviceGet(&device, 0));
 const auto event_names = cupti_profiler::available_events(device);
 const auto metric_names = cupti_profiler::available_metrics(device);
 #else
-  vector<string> event_names {
+  vector<string> event_names {    
     "fb_subp0_read_sectors",
 //    "fb_subp1_read_sectors",
      "fb_subp0_write_sectors",
@@ -153,10 +240,39 @@ const auto metric_names = cupti_profiler::available_metrics(device);
 
 
 
-
-                    
   };
   vector<string> metric_names {
+// "l2_read_transactions",// works
+//"nvlink_data_receive_efficiency",
+// "nvlink_data_transmission_efficiency",
+//"nvlink_overhead_data_received",
+//"nvlink_overhead_data_transmitted",
+//"nvlink_receive_throughput",
+// "inst_control",
+// "inst_fp_32",
+// "inst_fp_64",
+// "inst_integer",
+// "inst_issued",
+// "inst_per_warp",
+
+
+//  "nvlink_total_data_received",// works
+//  "nvlink_total_data_transmitted",// works
+//  "nvlink_total_nratom_data_transmitted" , // works
+// // "nvlink_total_ratom_data_transmitted" ,
+//  "nvlink_total_response_data_received" ,// works
+// // "nvlink_total_write_data_transmitted",
+//  "nvlink_transmit_throughput", //works
+// "nvlink_user_data_received",
+// "nvlink_user_data_transmitted",
+// "nvlink_user_nratom_data_transmitted" ,
+// "nvlink_user_ratom_data_transmitted",
+// "nvlink_user_response_data_received",
+// "nvlink_user_write_data_transmitted",
+
+// "l2_write_transactions",  // error
+// "dram_read_transactions",
+//"dram_write_transactions",
 
                     
   };
@@ -165,6 +281,7 @@ const auto metric_names = cupti_profiler::available_metrics(device);
   #endif
 CUcontext context;
 cuCtxCreate(&context, 0, 0);
+
 
 for(int i=0;i<100;i++)
 {
@@ -191,9 +308,8 @@ for(int i=0;i<100;i++)
 	gettimeofday(&ts,NULL);
 	
 	compute();
-	compute();
-	compute();
-	compute();
+	compute_mat();
+	compute_mat();
 
 	p->stop();
 	gettimeofday(&te,NULL);
@@ -211,4 +327,3 @@ for(int i=0;i<100;i++)
 fclose(stdout);
 return 0;
 }
-
