@@ -13,7 +13,7 @@
 #include <stdlib.h>
 
 const char *path_0 = "conv_event.csv";
-#define N 128 //Default matrix size NxN
+#define N 32 //Default matrix size NxN
 #define A(i,j) A[(i)*cols+(j)]  // row-major layout
 #define C(i,j) C[(i)*cols+(j)]  // row-major layout
 #define PROFILE_ALL_EVENTS_METRICS 0
@@ -166,23 +166,37 @@ const auto metric_names = cupti_profiler::available_metrics(device);
 CUcontext context;
 cuCtxCreate(&context, 0, 0);
 
-
-for(int j=0;j<counter1;j++)
+for(int i=0;i<10;i++)
 {
-  cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
-  struct timeval ts,te;
-  p->start();
-  gettimeofday(&ts,NULL);
-  
-  compute();
-  p->stop();
-  gettimeofday(&te,NULL);
+	for(int j=0;j<10;j++)
+	{
+	cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
+	struct timeval ts,te;
+	p->start();
+	gettimeofday(&ts,NULL);
+	
+	compute();
+	p->stop();
+	gettimeofday(&te,NULL);
 
-  p->print_event_values(std::cout,ts,te);
-  p->print_metric_values(std::cout,ts,te);
-  // p->print_events_and_metrics(std::cout);
+	p->print_event_values(std::cout,ts,te);
+	p->print_metric_values(std::cout,ts,te);
+	// p->print_events_and_metrics(std::cout);
 
-  free(p);
+	
+	}
+	p->start();
+	gettimeofday(&ts,NULL);
+	
+	compute();
+	p->stop();
+	gettimeofday(&te,NULL);
+
+	p->print_event_values(std::cout,ts,te);
+	p->print_metric_values(std::cout,ts,te);
+
+
+	free(p);
 }
 
 
