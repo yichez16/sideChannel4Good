@@ -368,7 +368,7 @@ for(int i=0;i<50;i++)
 
 	
 	}
-  for(int m=0;m<0;j++)
+  for(int m=0;m<0;m++)
 	{
 	cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
 	struct timeval ts,te;
