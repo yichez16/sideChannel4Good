@@ -139,7 +139,17 @@ DRIVER_API_CALL(cuDeviceGet(&device, 0));
 const auto event_names = cupti_profiler::available_events(device);
 const auto metric_names = cupti_profiler::available_metrics(device);
 #else
-  vector<string> event_names {                   
+  vector<string> event_names {    
+    "fb_subp0_read_sectors",
+//    "fb_subp1_read_sectors",
+     "fb_subp0_write_sectors",
+    // "fb_subp1_write_sectors",
+    "l2_subp0_read_sector_misses",
+    // "l2_subp1_read_sector_misses",
+     "l2_subp0_write_sector_misses",
+
+
+
   };
   vector<string> metric_names {
 //"l2_read_transactions",// works
@@ -148,13 +158,15 @@ const auto metric_names = cupti_profiler::available_metrics(device);
 //"nvlink_overhead_data_received",
 //"nvlink_overhead_data_transmitted",
 //"nvlink_receive_throughput",
- "nvlink_total_data_received",// works
- "nvlink_total_data_transmitted",// works
- "nvlink_total_nratom_data_transmitted" , // works
-// "nvlink_total_ratom_data_transmitted" ,
- "nvlink_total_response_data_received" ,// works
-// "nvlink_total_write_data_transmitted",
- "nvlink_transmit_throughput", //works
+"inst_executed",
+
+//  "nvlink_total_data_received",// works
+//  "nvlink_total_data_transmitted",// works
+//  "nvlink_total_nratom_data_transmitted" , // works
+// // "nvlink_total_ratom_data_transmitted" ,
+//  "nvlink_total_response_data_received" ,// works
+// // "nvlink_total_write_data_transmitted",
+//  "nvlink_transmit_throughput", //works
 // "nvlink_user_data_received",
 // "nvlink_user_data_transmitted",
 // "nvlink_user_nratom_data_transmitted" ,
@@ -175,22 +187,43 @@ CUcontext context;
 cuCtxCreate(&context, 0, 0);
 
 
-for(int j=0;j<counter1;j++)
+for(int i=0;i<100;i++)
 {
-  cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
-  struct timeval ts,te;
-  p->start();
-  gettimeofday(&ts,NULL);
-  
-  compute();
-  p->stop();
-  gettimeofday(&te,NULL);
+	for(int j=0;j<10;j++)
+	{
+	cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
+	struct timeval ts,te;
+	p->start();
+	gettimeofday(&ts,NULL);
+	
+	compute();
+	p->stop();
+	gettimeofday(&te,NULL);
 
-  p->print_event_values(std::cout,ts,te);
-  p->print_metric_values(std::cout,ts,te);
-  // p->print_events_and_metrics(std::cout);
+	p->print_event_values(std::cout,ts,te);
+	p->print_metric_values(std::cout,ts,te);
+	// p->print_events_and_metrics(std::cout);
 
-  free(p);
+	
+	}
+	cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
+	struct timeval ts,te;
+	p->start();
+	gettimeofday(&ts,NULL);
+	
+	compute();
+	compute();
+	compute();
+	compute();
+
+	p->stop();
+	gettimeofday(&te,NULL);
+
+	p->print_event_values(std::cout,ts,te);
+	p->print_metric_values(std::cout,ts,te);
+
+
+	free(p);
 }
 
 
