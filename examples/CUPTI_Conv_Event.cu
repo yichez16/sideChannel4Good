@@ -127,7 +127,7 @@ free(C);
 
 int main()  
 {
-freopen(path_0,"w",stdout);
+// freopen(path_0,"w",stdout);
 
 using namespace std;
 CUdevice device;
@@ -191,6 +191,10 @@ for(int i=0;i<10;i++)
 	gettimeofday(&ts,NULL);
 	
 	compute();
+	compute();
+	compute();
+	compute();
+
 	p->stop();
 	gettimeofday(&te,NULL);
 
@@ -204,7 +208,7 @@ for(int i=0;i<10;i++)
 
 
   
-fclose(stdout);
+// fclose(stdout);
 return 0;
 }
 
