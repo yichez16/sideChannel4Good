@@ -348,7 +348,7 @@ CUcontext context;
 cuCtxCreate(&context, 0, 0);
 
 
-for(int i=0;i<50;i++)
+for(int i=0;i<20;i++)
 {
 	for(int j=0;j<25;j++)
 	{
