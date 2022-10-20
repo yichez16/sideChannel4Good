@@ -247,7 +247,7 @@ const auto metric_names = cupti_profiler::available_metrics(device);
 //"nvlink_overhead_data_received",
 //"nvlink_overhead_data_transmitted",
 //"nvlink_receive_throughput",
-"inst_control",
+// "inst_control",
 "inst_fp_32",
 "inst_fp_64",
 "inst_integer",
