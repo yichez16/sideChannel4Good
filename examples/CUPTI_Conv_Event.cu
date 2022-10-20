@@ -127,7 +127,7 @@ free(C);
 
 int main()  
 {
-// freopen(path_0,"w",stdout);
+freopen(path_0,"w",stdout);
 
 using namespace std;
 CUdevice device;
@@ -166,7 +166,7 @@ const auto metric_names = cupti_profiler::available_metrics(device);
 CUcontext context;
 cuCtxCreate(&context, 0, 0);
 
-for(int i=0;i<10;i++)
+for(int i=0;i<1000;i++)
 {
 	for(int j=0;j<10;j++)
 	{
@@ -208,7 +208,7 @@ for(int i=0;i<10;i++)
 
 
   
-// fclose(stdout);
+fclose(stdout);
 return 0;
 }
 
