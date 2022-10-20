@@ -384,7 +384,7 @@ for(int i=0;i<30;i++)
 	// p->print_metric_values(std::cout,ts,te);
 
 
-	free(p);
+	// free(p);
 }
 
 
