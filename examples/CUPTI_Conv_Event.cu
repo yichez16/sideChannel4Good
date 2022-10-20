@@ -210,60 +210,60 @@ static void compute_mat() {
 
 
 
-// static void compute()
-// {
-//     //Host variables
-// 	int A[N+2][N+2] = {};//+2 for padding matrix
-// 	int *C;
+static void compute()
+{
+    //Host variables
+	int A[N+2][N+2] = {};//+2 for padding matrix
+	int *C;
 	
-// 	//Device variables
-// 	int *A_d = 0, *C_d = 0;
+	//Device variables
+	int *A_d = 0, *C_d = 0;
 
 
-// 	//Calculate memory size 
-// 	int memorySize = (N + 2) * (N + 2);
+	//Calculate memory size 
+	int memorySize = (N + 2) * (N + 2);
 
-// 	cudaEvent_t start, stop;
-// 	cudaEventCreate(&start);
-// 	cudaEventCreate(&stop);
+	cudaEvent_t start, stop;
+	cudaEventCreate(&start);
+	cudaEventCreate(&stop);
 
-// 	//Init matrix by 0
-// 	for (int i = 0; i < N+2; i++) {
-// 		for (int j = 0; j < N+2; j++) {
-// 			A[i][j] = 0;
-// 		}
-// }
+	//Init matrix by 0
+	for (int i = 0; i < N+2; i++) {
+		for (int j = 0; j < N+2; j++) {
+			A[i][j] = 0;
+		}
+}
 
-// 	//Generate random values between 0 and 9
-// srand(time(NULL));
-// for (int i = 0; i < N; i++) {
-//   for (int j = 0; j < N; j++) {
-//     A[i + 1][j + 1] = rand() % 10;
-//   }
-// }
+	//Generate random values between 0 and 9
+srand(time(NULL));
+for (int i = 0; i < N; i++) {
+  for (int j = 0; j < N; j++) {
+    A[i + 1][j + 1] = rand() % 10;
+  }
+}
 
-// C = (int *)malloc(sizeof(*C)*memorySize);
+C = (int *)malloc(sizeof(*C)*memorySize);
 
-// cudaMalloc((void**)&A_d, sizeof(*A_d)*memorySize);
-// cudaMalloc((void**)&C_d, sizeof(*C_d)*memorySize);
+cudaMalloc((void**)&A_d, sizeof(*A_d)*memorySize);
+cudaMalloc((void**)&C_d, sizeof(*C_d)*memorySize);
 
-// //Copy from host to device
-// cudaMemcpy(A_d, A, sizeof(*A_d)*memorySize, cudaMemcpyHostToDevice);
+//Copy from host to device
+cudaMemcpy(A_d, A, sizeof(*A_d)*memorySize, cudaMemcpyHostToDevice);
 
-// // cudaEventRecord(start);
-// convolution << <1, 128 >> >(A_d, C_d);//Block-thread
-// // cudaEventRecord(stop);
-// // cudaEventSynchronize(stop);
+// cudaEventRecord(start);
+convolution << <1, 128 >> >(A_d, C_d);//Block-thread
+// cudaEventRecord(stop);
+// cudaEventSynchronize(stop);
 
-// //Copy from device to host
-// cudaMemcpy(C, C_d, sizeof(*C)*memorySize, cudaMemcpyDeviceToHost);
+//Copy from device to host
+cudaMemcpy(C, C_d, sizeof(*C)*memorySize, cudaMemcpyDeviceToHost);
 
 
-// //Free memory
-// cudaFree(C_d);
-// cudaFree(A_d);
-// free(C);
-// }
+//Free memory
+cudaFree(C_d);
+cudaFree(A_d);
+free(C);
+}
 
 
 
@@ -293,14 +293,14 @@ const auto event_names = cupti_profiler::available_events(device);
 const auto metric_names = cupti_profiler::available_metrics(device);
 #else
   vector<string> event_names {    
-//     "fb_subp0_read_sectors",
-// //    "fb_subp1_read_sectors",
-//      "fb_subp0_write_sectors",
-//     // "fb_subp1_write_sectors",
-//     "l2_subp0_read_sector_misses",
-//     // "l2_subp1_read_sector_misses",
-//      "l2_subp0_write_sector_misses",
-    // "l2_subp1_write_sector_misses"
+    "fb_subp0_read_sectors",
+//    "fb_subp1_read_sectors",
+     "fb_subp0_write_sectors",
+    // "fb_subp1_write_sectors",
+    "l2_subp0_read_sector_misses",
+    // "l2_subp1_read_sector_misses",
+     "l2_subp0_write_sector_misses",
+    "l2_subp1_write_sector_misses"
 
 
 
@@ -317,7 +317,7 @@ const auto metric_names = cupti_profiler::available_metrics(device);
 // "inst_fp_64",
 // "inst_integer",
 // "inst_executed", not work
-"inst_issued",
+// "inst_issued",
 // "inst_per_warp",
 
 
@@ -373,7 +373,7 @@ for(int i=0;i<30;i++)
 	p->start();
 	gettimeofday(&ts,NULL);
 	
-	// compute();
+	compute();
 	// compute_mat();
 	// compute_vecmul();
 
