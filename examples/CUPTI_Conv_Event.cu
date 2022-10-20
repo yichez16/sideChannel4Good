@@ -316,7 +316,7 @@ const auto metric_names = cupti_profiler::available_metrics(device);
 // "inst_fp_32",
 // "inst_fp_64",
 // "inst_integer",
-// "inst_issued",
+"inst_issued",
 // "inst_per_warp",
 
 
@@ -364,24 +364,24 @@ for(int i=0;i<30;i++)
 	p->print_event_values(std::cout,ts,te);
 	p->print_metric_values(std::cout,ts,te);
 	// p->print_events_and_metrics(std::cout);
-		
+
 	
 	}
-	// cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
-	// struct timeval ts,te;
-	// p->start();
-	// gettimeofday(&ts,NULL);
+	cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
+	struct timeval ts,te;
+	p->start();
+	gettimeofday(&ts,NULL);
 	
 	// compute();
-	// // compute_mat();
-	// // compute_vecmul();
+	// compute_mat();
+	// compute_vecmul();
 
 
-	// p->stop();
-	// gettimeofday(&te,NULL);
+	p->stop();
+	gettimeofday(&te,NULL);
 
-	// p->print_event_values(std::cout,ts,te);
-	// p->print_metric_values(std::cout,ts,te);
+	p->print_event_values(std::cout,ts,te);
+	p->print_metric_values(std::cout,ts,te);
 
 
 	// free(p);
