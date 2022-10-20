@@ -27,12 +27,12 @@ matMul(const int *A, const int *B, int *C, int numElements)
 }
 
 
- static void
- initVec(int *vec, int n)
- {
-     for (int i = 0; i < n; i++)
-         vec[i] = i;
- }
+static void
+initVec(int *vec, int n)
+{
+    for (int i = 0; i < n; i++)
+        vec[i] = i;
+}
 
 
 static void compute()
