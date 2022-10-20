@@ -13,15 +13,15 @@
 #include <stdlib.h>
 
 const char *path_0 = "conv_metrics.csv";
-#define N 128 //Default matrix size NxN
+#define N 1024 //Default matrix size NxN
 #define A(i,j) A[(i)*cols+(j)]  // row-major layout
 #define C(i,j) C[(i)*cols+(j)]  // row-major layout
 #define PROFILE_ALL_EVENTS_METRICS 0
 int counter1 = 200000;
 
-int numARows = 100;
-int numACols = 100;
-int numBCols = 100;
+int numARows = 1024;
+int numACols = 1024;
+int numBCols = 1024;
 
 __global__ void convolution(int *A, int *C)
 {
@@ -78,8 +78,72 @@ __global__ void matMul(float* A, float* B, float* C, int numARows, int numACols,
     }
 }
 
+__global__ void
+vecMul(const int *A, const int *B, int *C, int numElements)
+{
+    int i = blockDim.x * blockIdx.x + threadIdx.x;
+
+    if (i < numElements)
+    {
+        C[i] = A[i] * B[i];
+    }
+}
+
+static void
+initVec(int *vec, int n)
+{
+    for (int i = 0; i < n; i++)
+        vec[i] = i;
+}
 
 
+static void compute_vecmul()
+ {
+    size_t size = N * sizeof(int);
+
+    int *h_A, *h_B, *h_C;
+    int *d_A, *d_B, *d_C;
+    
+    // cudaEvent_t start, stop;
+    // cudaEventCreate(&start);
+    // cudaEventCreate(&stop);
+    
+    // Allocate input vectors h_A and h_B in host memory
+    h_A = (int*)malloc(size);
+    h_B = (int*)malloc(size);
+    h_C = (int*)malloc(size);
+
+    // Initialize input vectors
+    initVec(h_A, N);
+    initVec(h_B, N);
+    memset(h_C, 0, size);
+
+    // Allocate vectors in device memory
+    cudaMalloc((void**)&d_A, size);
+    cudaMalloc((void**)&d_B, size);
+    cudaMalloc((void**)&d_C, size);
+
+    // Copy vectors from host memory to device memory
+    cudaMemcpy(d_A, h_A, size, cudaMemcpyHostToDevice);
+    cudaMemcpy(d_B, h_B, size, cudaMemcpyHostToDevice);
+
+
+    // int priority_hi = -1;
+    // cudaStream_t st_hi;
+    // cudaStreamCreateWithPriority(&st_hi,  cudaStreamNonBlocking, priority_hi);
+    vecMul << <1, 128  >> > (d_A, d_B, d_C, N);
+
+
+    cudaMemcpy(h_C, d_C, size, cudaMemcpyDeviceToHost);
+
+
+    cudaFree(d_A);
+    cudaFree(d_B);
+    cudaFree(d_C);
+    free(h_A);
+    free(h_B);
+    free(h_C);
+ }
 
 static void compute_mat() {
 
@@ -309,7 +373,8 @@ for(int i=0;i<100;i++)
 	
 	compute();
 	compute_mat();
-	compute_mat();
+	compute_vecmul();
+
 
 	p->stop();
 	gettimeofday(&te,NULL);
