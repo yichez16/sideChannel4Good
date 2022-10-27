@@ -19,9 +19,9 @@ const char *path_0 = "conv_metrics.csv";
 #define PROFILE_ALL_EVENTS_METRICS 0
 int counter1 = 200000;
 
-int numARows = 1024;
-int numACols = 1024;
-int numBCols = 1024;
+int numARows = 64;
+int numACols = 64;
+int numBCols = 64;
 
 __global__ void convolution(int *A, int *C)
 {
