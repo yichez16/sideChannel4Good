@@ -13,15 +13,15 @@
 #include <stdlib.h>
 
 const char *path_0 = "conv_metrics.csv";
-#define N 64 //Default matrix size NxN
+#define N 256 //Default matrix size NxN
 #define A(i,j) A[(i)*cols+(j)]  // row-major layout
 #define C(i,j) C[(i)*cols+(j)]  // row-major layout
 #define PROFILE_ALL_EVENTS_METRICS 0
 int counter1 = 200000;
 
-int numARows = 64;
-int numACols = 64;
-int numBCols = 64;
+int numARows = 32;
+int numACols = 32;
+int numBCols = 32;
 
 __global__ void convolution(int *A, int *C)
 {
@@ -99,7 +99,7 @@ initVec(int *vec, int n)
 
 static void compute_vecmul()
  {
-    size_t size = N * sizeof(int);
+    size_t size = numARows * sizeof(int);
 
     int *h_A, *h_B, *h_C;
     int *d_A, *d_B, *d_C;

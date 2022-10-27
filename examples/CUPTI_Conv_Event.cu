@@ -99,7 +99,7 @@ initVec(int *vec, int n)
 
 static void compute_vecmul()
  {
-    size_t size = N * sizeof(int);
+    size_t size = numARows * sizeof(int);
 
     int *h_A, *h_B, *h_C;
     int *d_A, *d_B, *d_C;
