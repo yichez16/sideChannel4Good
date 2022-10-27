@@ -365,7 +365,7 @@ for(int i=0;i<40;i++)
 	p->print_event_values(std::cout,ts,te);
 	// p->print_metric_values(std::cout,ts,te);
 	// p->print_events_and_metrics(std::cout);
-
+	free(p);	
 	
 	}
 	for(int m=0;m<1;m++)
@@ -385,6 +385,8 @@ for(int i=0;i<40;i++)
 
 	p->print_event_values(std::cout,ts,te);
 	// p->print_metric_values(std::cout,ts,te);
+	
+	free(p);
 	}
 
 	// free(p);
