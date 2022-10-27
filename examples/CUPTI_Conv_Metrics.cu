@@ -13,7 +13,7 @@
 #include <stdlib.h>
 
 const char *path_0 = "conv_metrics.csv";
-#define N 256 //Default matrix size NxN
+#define N 128 //Default matrix size NxN
 #define A(i,j) A[(i)*cols+(j)]  // row-major layout
 #define C(i,j) C[(i)*cols+(j)]  // row-major layout
 #define PROFILE_ALL_EVENTS_METRICS 0
@@ -114,8 +114,8 @@ static void compute_vecmul()
     h_C = (int*)malloc(size);
 
     // Initialize input vectors
-    initVec(h_A, N);
-    initVec(h_B, N);
+    initVec(h_A, numARows);
+    initVec(h_B, numARows);
     memset(h_C, 0, size);
 
     // Allocate vectors in device memory
@@ -131,7 +131,7 @@ static void compute_vecmul()
     // int priority_hi = -1;
     // cudaStream_t st_hi;
     // cudaStreamCreateWithPriority(&st_hi,  cudaStreamNonBlocking, priority_hi);
-    vecMul << <64, 128  >> > (d_A, d_B, d_C, N);
+    vecMul << <64, 128  >> > (d_A, d_B, d_C, numARows);
 
 
     cudaMemcpy(h_C, d_C, size, cudaMemcpyDeviceToHost);
