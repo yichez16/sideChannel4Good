@@ -13,15 +13,15 @@
 #include <stdlib.h>
 
 const char *path_0 = "conv_event.csv";
-#define N 64 //Default matrix size NxN
+#define N 256 //Default matrix size NxN
 #define A(i,j) A[(i)*cols+(j)]  // row-major layout
 #define C(i,j) C[(i)*cols+(j)]  // row-major layout
 #define PROFILE_ALL_EVENTS_METRICS 0
 int counter1 = 200000;
 
-int numARows = 64;
-int numACols = 64;
-int numBCols = 64;
+int numARows = 32;
+int numACols = 32;
+int numBCols = 32;
 
 __global__ void convolution(int *A, int *C)
 {
@@ -280,7 +280,7 @@ free(C);
 
 int main()  
 {
-freopen(path_0,"w",stdout);
+// freopen(path_0,"w",stdout);
 
 using namespace std;
 CUdevice device;
@@ -560,6 +560,6 @@ for(int i=0;i<40;i++)
 // }
 
   
-fclose(stdout);
+// fclose(stdout);
 return 0;
 }
