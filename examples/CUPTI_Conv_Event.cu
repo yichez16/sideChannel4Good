@@ -13,7 +13,7 @@
 #include <stdlib.h>
 
 const char *path_0 = "conv_event.csv";
-#define N 1024 //Default matrix size NxN
+#define N 64 //Default matrix size NxN
 #define A(i,j) A[(i)*cols+(j)]  // row-major layout
 #define C(i,j) C[(i)*cols+(j)]  // row-major layout
 #define PROFILE_ALL_EVENTS_METRICS 0
@@ -131,7 +131,7 @@ static void compute_vecmul()
     // int priority_hi = -1;
     // cudaStream_t st_hi;
     // cudaStreamCreateWithPriority(&st_hi,  cudaStreamNonBlocking, priority_hi);
-    vecMul << <1, 128  >> > (d_A, d_B, d_C, N);
+    vecMul << <64,128  >> > (d_A, d_B, d_C, N);
 
 
     cudaMemcpy(h_C, d_C, size, cudaMemcpyDeviceToHost);
@@ -195,7 +195,7 @@ static void compute_mat() {
 
 
     cudaEventRecord(start);
-    matMul<<<1,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
+    matMul<<<64,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
     cudaEventRecord(stop);
     cudaEventSynchronize(stop);
 
@@ -251,7 +251,7 @@ cudaMalloc((void**)&C_d, sizeof(*C_d)*memorySize);
 cudaMemcpy(A_d, A, sizeof(*A_d)*memorySize, cudaMemcpyHostToDevice);
 
 // cudaEventRecord(start);
-convolution << <1, 128 >> >(A_d, C_d);//Block-thread
+convolution << <64,128 >> >(A_d, C_d);//Block-thread
 // cudaEventRecord(stop);
 // cudaEventSynchronize(stop);
 
@@ -391,173 +391,173 @@ for(int i=0;i<10;i++)
 }
 
 
-for(int i=0;i<10;i++)
-{
-	for(int j=0;j<75;j++)
-	{
-	cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
-	struct timeval ts,te;
-	p->start();
-	gettimeofday(&ts,NULL);
+// for(int i=0;i<10;i++)
+// {
+// 	for(int j=0;j<75;j++)
+// 	{
+// 	cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
+// 	struct timeval ts,te;
+// 	p->start();
+// 	gettimeofday(&ts,NULL);
 	
-	compute_mat();
-	compute_vecmul();
-	p->stop();
-	gettimeofday(&te,NULL);
+// 	compute_mat();
+// 	compute_vecmul();
+// 	p->stop();
+// 	gettimeofday(&te,NULL);
 
-	p->print_event_values(std::cout,ts,te);
-	// p->print_metric_values(std::cout,ts,te);
-	// p->print_events_and_metrics(std::cout);
-
-	
-	}
-	for(int m=0;m<1;m++)
-	{
-	cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
-	struct timeval ts,te;
-	p->start();
-	gettimeofday(&ts,NULL);
-	
-	compute();
-	// compute_mat();
-	// compute_vecmul();
-
-
-	p->stop();
-	gettimeofday(&te,NULL);
-
-	p->print_event_values(std::cout,ts,te);
-	// p->print_metric_values(std::cout,ts,te);
-	}
-
-	// free(p);
-}
-
-for(int i=0;i<10;i++)
-{
-	for(int j=0;j<40;j++)
-	{
-	cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
-	struct timeval ts,te;
-	p->start();
-	gettimeofday(&ts,NULL);
-	
-	compute_mat();
-	compute_vecmul();
-	p->stop();
-	gettimeofday(&te,NULL);
-
-	p->print_event_values(std::cout,ts,te);
-	// p->print_metric_values(std::cout,ts,te);
-	// p->print_events_and_metrics(std::cout);
+// 	p->print_event_values(std::cout,ts,te);
+// 	// p->print_metric_values(std::cout,ts,te);
+// 	// p->print_events_and_metrics(std::cout);
 
 	
-	}
-	for(int m=0;m<1;m++)
-	{
-	cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
-	struct timeval ts,te;
-	p->start();
-	gettimeofday(&ts,NULL);
+// 	}
+// 	for(int m=0;m<1;m++)
+// 	{
+// 	cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
+// 	struct timeval ts,te;
+// 	p->start();
+// 	gettimeofday(&ts,NULL);
 	
-	compute();
-	// compute_mat();
-	// compute_vecmul();
+// 	compute();
+// 	// compute_mat();
+// 	// compute_vecmul();
 
 
-	p->stop();
-	gettimeofday(&te,NULL);
+// 	p->stop();
+// 	gettimeofday(&te,NULL);
 
-	p->print_event_values(std::cout,ts,te);
-	// p->print_metric_values(std::cout,ts,te);
-	}
+// 	p->print_event_values(std::cout,ts,te);
+// 	// p->print_metric_values(std::cout,ts,te);
+// 	}
 
-	// free(p);
-}
+// 	// free(p);
+// }
 
-for(int i=0;i<10;i++)
-{
-	for(int j=0;j<50;j++)
-	{
-	cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
-	struct timeval ts,te;
-	p->start();
-	gettimeofday(&ts,NULL);
+// for(int i=0;i<10;i++)
+// {
+// 	for(int j=0;j<40;j++)
+// 	{
+// 	cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
+// 	struct timeval ts,te;
+// 	p->start();
+// 	gettimeofday(&ts,NULL);
 	
-	compute_mat();
-	compute_vecmul();
-	p->stop();
-	gettimeofday(&te,NULL);
+// 	compute_mat();
+// 	compute_vecmul();
+// 	p->stop();
+// 	gettimeofday(&te,NULL);
 
-	p->print_event_values(std::cout,ts,te);
-	// p->print_metric_values(std::cout,ts,te);
-	// p->print_events_and_metrics(std::cout);
-
-	
-	}
-	for(int m=0;m<1;m++)
-	{
-	cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
-	struct timeval ts,te;
-	p->start();
-	gettimeofday(&ts,NULL);
-	
-	compute();
-	// compute_mat();
-	// compute_vecmul();
-
-
-	p->stop();
-	gettimeofday(&te,NULL);
-
-	p->print_event_values(std::cout,ts,te);
-	// p->print_metric_values(std::cout,ts,te);
-	}
-
-	// free(p);
-}
-
-for(int i=0;i<10;i++)
-{
-	for(int j=0;j<30;j++)
-	{
-	cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
-	struct timeval ts,te;
-	p->start();
-	gettimeofday(&ts,NULL);
-	
-	compute_mat();
-	compute_vecmul();
-	p->stop();
-	gettimeofday(&te,NULL);
-
-	p->print_event_values(std::cout,ts,te);
-	// p->print_metric_values(std::cout,ts,te);
-	// p->print_events_and_metrics(std::cout);
+// 	p->print_event_values(std::cout,ts,te);
+// 	// p->print_metric_values(std::cout,ts,te);
+// 	// p->print_events_and_metrics(std::cout);
 
 	
-	}
-	for(int m=0;m<1;m++)
-	{
-	cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
-	struct timeval ts,te;
-	p->start();
-	gettimeofday(&ts,NULL);
+// 	}
+// 	for(int m=0;m<1;m++)
+// 	{
+// 	cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
+// 	struct timeval ts,te;
+// 	p->start();
+// 	gettimeofday(&ts,NULL);
 	
-	compute();
-	// compute_mat();
-	// compute_vecmul();
+// 	compute();
+// 	// compute_mat();
+// 	// compute_vecmul();
 
 
-	p->stop();
-	gettimeofday(&te,NULL);
+// 	p->stop();
+// 	gettimeofday(&te,NULL);
 
-	p->print_event_values(std::cout,ts,te);
-	// p->print_metric_values(std::cout,ts,te);
-	}
+// 	p->print_event_values(std::cout,ts,te);
+// 	// p->print_metric_values(std::cout,ts,te);
+// 	}
 
-	// free(p);
-}
+// 	// free(p);
+// }
+
+// for(int i=0;i<10;i++)
+// {
+// 	for(int j=0;j<50;j++)
+// 	{
+// 	cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
+// 	struct timeval ts,te;
+// 	p->start();
+// 	gettimeofday(&ts,NULL);
+	
+// 	compute_mat();
+// 	compute_vecmul();
+// 	p->stop();
+// 	gettimeofday(&te,NULL);
+
+// 	p->print_event_values(std::cout,ts,te);
+// 	// p->print_metric_values(std::cout,ts,te);
+// 	// p->print_events_and_metrics(std::cout);
+
+	
+// 	}
+// 	for(int m=0;m<1;m++)
+// 	{
+// 	cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
+// 	struct timeval ts,te;
+// 	p->start();
+// 	gettimeofday(&ts,NULL);
+	
+// 	compute();
+// 	// compute_mat();
+// 	// compute_vecmul();
+
+
+// 	p->stop();
+// 	gettimeofday(&te,NULL);
+
+// 	p->print_event_values(std::cout,ts,te);
+// 	// p->print_metric_values(std::cout,ts,te);
+// 	}
+
+// 	// free(p);
+// }
+
+// for(int i=0;i<10;i++)
+// {
+// 	for(int j=0;j<30;j++)
+// 	{
+// 	cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
+// 	struct timeval ts,te;
+// 	p->start();
+// 	gettimeofday(&ts,NULL);
+	
+// 	compute_mat();
+// 	compute_vecmul();
+// 	p->stop();
+// 	gettimeofday(&te,NULL);
+
+// 	p->print_event_values(std::cout,ts,te);
+// 	// p->print_metric_values(std::cout,ts,te);
+// 	// p->print_events_and_metrics(std::cout);
+
+	
+// 	}
+// 	for(int m=0;m<1;m++)
+// 	{
+// 	cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
+// 	struct timeval ts,te;
+// 	p->start();
+// 	gettimeofday(&ts,NULL);
+	
+// 	compute();
+// 	// compute_mat();
+// 	// compute_vecmul();
+
+
+// 	p->stop();
+// 	gettimeofday(&te,NULL);
+
+// 	p->print_event_values(std::cout,ts,te);
+// 	// p->print_metric_values(std::cout,ts,te);
+// 	}
+
+// 	// free(p);
+// }
 
   
 fclose(stdout);
