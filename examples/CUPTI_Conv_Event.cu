@@ -295,12 +295,21 @@ const auto metric_names = cupti_profiler::available_metrics(device);
   vector<string> event_names {    
     "fb_subp0_read_sectors",
 //    "fb_subp1_read_sectors",
-     "fb_subp0_write_sectors",
+    //  "fb_subp0_write_sectors",
     // "fb_subp1_write_sectors",
     "l2_subp0_read_sector_misses",
+    "atom_count",
+    "inst_executed",
+    "inst_issued0",
+    "shared_load",
+    "generic_load",
+    "global_load",
+    "local_load",
+    "shared_ld_bank_conflict",
+    "shared_ld_transactions",
     // "l2_subp1_read_sector_misses",
-     "l2_subp0_write_sector_misses",
-    "l2_subp1_write_sector_misses"
+    //  "l2_subp0_write_sector_misses",
+    // "l2_subp1_write_sector_misses"
 
 
 
@@ -348,7 +357,7 @@ CUcontext context;
 cuCtxCreate(&context, 0, 0);
 
 
-for(int i=0;i<10;i++)
+for(int i=0;i<2;i++)
 {
 	for(int j=0;j<50;j++)
 	{

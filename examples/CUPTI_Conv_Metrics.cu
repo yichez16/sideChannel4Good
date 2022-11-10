@@ -318,6 +318,44 @@ const auto metric_names = cupti_profiler::available_metrics(device);
 // "inst_integer",
 // "inst_executed", not work
 "inst_issued",
+//  6.x metrics
+"atomic_transactions",
+"achieved_occupancy",
+"atomic_transactions_per_request",
+"branch_efficiency",
+"cf_executed",
+"cf_issued",
+"dram_read_bytes",
+"dram_read_throughput",
+"dram_read_transactions",
+"ecc_throughput",
+"global_hit_rate",
+"global_load_requests",
+"inst_control",
+"ipc",
+"l2_global_load_bytes",
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // "inst_per_warp",
 
 
@@ -432,7 +470,7 @@ for(int i=0;i<10;i++)
 	// free(p);
 }
 
-for(int i=0;i<10;i++)
+for(int i=0;i<2;i++)
 {
 	for(int j=0;j<50;j++)
 	{
