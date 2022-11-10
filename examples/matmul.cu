@@ -3,7 +3,6 @@
 #include <string>
 #include <thrust/device_vector.h>
 #include <fstream>
-#include <cupti_profiler.h>
 #include <time.h>
 #include <sys/time.h>
 #include <unistd.h>
@@ -86,7 +85,7 @@ static void compute() {
 
 
     cudaEventRecord(start);
-    matMul<<<1,100>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
+    matMul<<<16,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
     cudaEventRecord(stop);
     cudaEventSynchronize(stop);
 
@@ -101,108 +100,14 @@ static void compute() {
 
  int main()  
  {
- freopen(path_0,"w",stdout);
- 
- using namespace std;
- CUdevice device;
- 
- DRIVER_API_CALL(cuInit(0));
- DRIVER_API_CALL(cuDeviceGet(&device, 0));
- 
- #if PROFILE_ALL_EVENTS_METRICS
-   const auto event_names = cupt 
-   i_profiler::available_events(device);
-   const auto metric_names = cupti_profiler::available_metrics(device);
- #else
-   vector<string> event_names {
-     //"elapsed_cycles_sm",
- 
-     // "active_warps",
- 
-     // "inst_issued0",
- 
-     // "inst_executed",
- 
- 
-     // "tex1_cache_sector_queries",
-    "fb_subp1_write_sectors",
-    "fb_subp0_read_sectors",
-    "l2_subp0_write_sector_misses",
-    "l2_subp1_read_sector_misses",
-    "branch",
-     // "l2_subp0_write_sector_misses",
-     // "l2_subp1_read_sector_misses",
-     // "branch",
- 
-     // "gld_inst_8bit",
- 
-     //"elapsed_cycles_sm",
- 
-     // "tex1_cache_sector_queries",
- 
-     // "l2_subp0_read_tex_sector_queries",
- 
-     // "l2_subp1_write_tex_sector_queries",
-   
-     // "active_warps",
- 
-     // "elapsed_cycles_sm",
- 
-     // "l2_subp1_write_sysmem_sector_queries",
-     // "l2_subp0_read_sysmem_sector_queries",
- 
   
-     
- 
-     // "inst_executed",
- 
-     // "inst_issued0",
- 
-     // "branch",
- 
-                     
-   };
-   vector<string> metric_names {
-                     // "dram_read_transactions",
-                     // //"local_hit_rate",
-                     // "dram_write_transactions",
-                     //"inst_executed",
-                     //"stall_memory_dependency",      //*This metrics will cause profiler to be very slow*//
-                     //"stall_inst_fetch",            //*This metrics will cause profiler to be very slow*//
-                     //"cf_issued",
-                     //"tex_fu_utilization",
-                     //"l2_write_transactions",
-                     //"shared_store_transactions",
-                     //"tex_cache_transactions",
-                     
-   };
- 
-   
-   #endif
- CUcontext context;
- cuCtxCreate(&context, 0, 0);
- 
- 
  for(int j=0;j<counter1;j++)
  {
-   cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
-   struct timeval ts,te;
-   p->start();
-   gettimeofday(&ts,NULL);
-   
    compute();
-   p->stop();
-   gettimeofday(&te,NULL);
- 
-   p->print_event_values(std::cout,ts,te);
-   p->print_metric_values(std::cout,ts,te);
-   free(p);
  }
  
  
  
    
- fclose(stdout);
- return 0;
  }
  
