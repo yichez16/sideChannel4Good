@@ -299,6 +299,8 @@ const auto metric_names = cupti_profiler::available_metrics(device);
     "inst_executed",
     "global_store",
     "global_load",
+    "branch",
+    "active_warps",
     // "atom_count",
     // "shared_load",
     // "generic_load",
