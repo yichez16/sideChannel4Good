@@ -147,6 +147,9 @@ static void compute_vecmul()
 
 static void compute_mat() {
 
+
+
+    
     cudaEvent_t start, stop;
     cudaEventCreate(&start);
     cudaEventCreate(&stop);
@@ -193,12 +196,16 @@ static void compute_mat() {
     // dim3 threadPerBlock(BLOCK_SIZE, BLOCK_SIZE, 1);
     // dim3 blockPerGrid(ceil(numBCols/(float)BLOCK_SIZE), ceil(numACols/(float)BLOCK_SIZE), 1);
 
-
-    cudaEventRecord(start);
+    for(int i=0;i<15;i++)
+{
+	for(int j=0;j<10;j++)
+	{
     matMul<<<64,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
-    cudaEventRecord(stop);
-    cudaEventSynchronize(stop);
+    }
 
+    
+
+}
 
     cudaMemcpy(h_C, d_C, sizeC, cudaMemcpyDeviceToHost);
 
