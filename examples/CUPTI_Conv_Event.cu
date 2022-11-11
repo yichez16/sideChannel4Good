@@ -294,12 +294,13 @@ const auto metric_names = cupti_profiler::available_metrics(device);
 #else
   vector<string> event_names {    
     "fb_subp0_read_sectors",
-    "l2_subp0_read_sector_misses",
+    "l2_subp0_read_tex_hit_sectors",
     "tex0_cache_sector_queries",
     "inst_executed",
     "global_store",
     "global_load",
     "active_warps",
+
     // "atom_count",
     // "shared_load",
     // "generic_load",
@@ -330,9 +331,7 @@ for(int i=0;i<15;i++)
 	struct timeval ts,te;
 	p->start();
 	gettimeofday(&ts,NULL);
-	
 	compute_mat();
-	// compute_vecmul();
 	p->stop();
 	gettimeofday(&te,NULL);
 
@@ -358,7 +357,6 @@ for(int i=0;i<15;i++)
 	gettimeofday(&te,NULL);
 
 	p->print_event_values(std::cout,ts,te);
-	// p->print_metric_values(std::cout,ts,te);
 	
 	free(p);
 	}
