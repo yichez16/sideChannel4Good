@@ -149,7 +149,7 @@ static void compute_mat() {
 
 
 
-    
+
     cudaEvent_t start, stop;
     cudaEventCreate(&start);
     cudaEventCreate(&stop);
@@ -195,13 +195,92 @@ static void compute_mat() {
 
     // dim3 threadPerBlock(BLOCK_SIZE, BLOCK_SIZE, 1);
     // dim3 blockPerGrid(ceil(numBCols/(float)BLOCK_SIZE), ceil(numACols/(float)BLOCK_SIZE), 1);
-
+    using namespace std;
+    CUdevice device;
+    
+    DRIVER_API_CALL(cuInit(0));
+    DRIVER_API_CALL(cuDeviceGet(&device, 0));
+    
+    #if PROFILE_ALL_EVENTS_METRICS
+    const auto event_names = cupti_profiler::available_events(device);
+    const auto metric_names = cupti_profiler::available_metrics(device);
+    #else
+      vector<string> event_names {    
+        "fb_subp0_write_sectors",
+        "l2_subp0_read_tex_hit_sectors",
+        "tex0_cache_sector_queries",
+        "inst_executed",
+        "global_store",
+        "global_load",
+        "active_warps",
+    
+        // "atom_count",
+        // "shared_load",
+        // "generic_load",
+        // "global_load",
+        // "local_load",
+        // "shared_ld_bank_conflict",
+        // "shared_ld_transactions",
+    
+    
+    
+      };
+      vector<string> metric_names {
+    
+                        
+      };
+    
+      
+      #endif
+    CUcontext context;
+    cuCtxCreate(&context, 0, 0);
+    
+    
     for(int i=0;i<15;i++)
-{
-	for(int j=0;j<10;j++)
-	{
-    matMul<<<64,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
+    {
+        for(int j=0;j<10;j++)
+        {
+        cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
+        struct timeval ts,te;
+        p->start();
+        gettimeofday(&ts,NULL);
+        matMul<<<64,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
+        p->stop();
+        gettimeofday(&te,NULL);
+    
+        p->print_event_values(std::cout,ts,te);
+        free(p);	
+        
+        }
+        for(int m=0;m<1;m++)
+        {
+        cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
+        struct timeval ts,te;
+        p->start();
+        gettimeofday(&ts,NULL);
+        
+        matMul<<<64,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
+
+    
+    
+        p->stop();
+        gettimeofday(&te,NULL);
+    
+        p->print_event_values(std::cout,ts,te);
+        
+        free(p);
+        }
+    
+        // free(p);
     }
+
+
+//     for(int i=0;i<15;i++)
+// {
+// 	for(int j=0;j<10;j++)
+// 	{
+//     matMul<<<64,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
+//     }
 
     
 
