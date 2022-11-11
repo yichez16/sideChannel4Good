@@ -13,15 +13,15 @@
 #include <stdlib.h>
 
 const char *path_0 = "conv_event.csv";
-#define N 160 //Default matrix size NxN
+#define N 8 //Default matrix size NxN
 #define A(i,j) A[(i)*cols+(j)]  // row-major layout
 #define C(i,j) C[(i)*cols+(j)]  // row-major layout
 #define PROFILE_ALL_EVENTS_METRICS 0
 int counter1 = 200000;
 
-int numARows = 32;
-int numACols = 32;
-int numBCols = 32;
+int numARows = 8;
+int numACols = 8;
+int numBCols = 8;
 
 __global__ void convolution(int *A, int *C)
 {
@@ -325,7 +325,7 @@ cuCtxCreate(&context, 0, 0);
 
 for(int i=0;i<15;i++)
 {
-	for(int j=0;j<20;j++)
+	for(int j=0;j<10;j++)
 	{
 	cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
 	struct timeval ts,te;
