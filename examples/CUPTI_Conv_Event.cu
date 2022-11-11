@@ -252,24 +252,24 @@ static void compute_mat() {
         free(p);	
         
         }
-        for(int m=0;m<1;m++)
-        {
-        cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
-        struct timeval ts,te;
-        p->start();
-        gettimeofday(&ts,NULL);
+        // for(int m=0;m<1;m++)
+        // {
+        // cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
+        // struct timeval ts,te;
+        // p->start();
+        // gettimeofday(&ts,NULL);
         
-        matMul<<<64,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
+        // matMul<<<64,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
 
     
     
-        p->stop();
-        gettimeofday(&te,NULL);
+        // p->stop();
+        // gettimeofday(&te,NULL);
     
-        p->print_event_values(std::cout,ts,te);
+        // p->print_event_values(std::cout,ts,te);
         
-        free(p);
-        }
+        // free(p);
+        // }
     
         // free(p);
     }
