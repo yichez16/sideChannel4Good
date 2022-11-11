@@ -296,20 +296,15 @@ const auto metric_names = cupti_profiler::available_metrics(device);
     "fb_subp0_read_sectors",
     "l2_subp0_read_sector_misses",
     "tex0_cache_sector_queries",
-    "inst_issued0",
     "inst_executed",
+    "global_store",
     // "atom_count",
-    // "inst_executed",
-    // "inst_issued0",
     // "shared_load",
     // "generic_load",
     // "global_load",
     // "local_load",
     // "shared_ld_bank_conflict",
     // "shared_ld_transactions",
-    // "l2_subp1_read_sector_misses",
-    //  "l2_subp0_write_sector_misses",
-    // "l2_subp1_write_sector_misses"
 
 
 
