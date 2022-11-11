@@ -298,6 +298,7 @@ const auto metric_names = cupti_profiler::available_metrics(device);
     "tex0_cache_sector_queries",
     "inst_executed",
     "global_store",
+    "global_load",
     // "atom_count",
     // "shared_load",
     // "generic_load",
