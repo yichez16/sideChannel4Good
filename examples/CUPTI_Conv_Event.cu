@@ -280,7 +280,7 @@ free(C);
 
 int main()  
 {
-freopen(path_0,"w",stdout);
+// freopen(path_0,"w",stdout);
 
 using namespace std;
 CUdevice device;
@@ -294,12 +294,9 @@ const auto metric_names = cupti_profiler::available_metrics(device);
 #else
   vector<string> event_names {    
     "fb_subp0_read_sectors",
-//    "fb_subp1_read_sectors",
-    //  "fb_subp0_write_sectors",
-    // "fb_subp1_write_sectors",
     "l2_subp0_read_sector_misses",
     "tex0_cache_sector_queries",
-    // "inst_issued0",
+    "inst_issued0",
     // "inst_executed",
     // "atom_count",
     // "inst_executed",
@@ -574,6 +571,6 @@ for(int i=0;i<2;i++)
 // }
 
   
-fclose(stdout);
+// fclose(stdout);
 return 0;
 }
