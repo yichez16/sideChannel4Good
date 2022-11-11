@@ -13,15 +13,15 @@
 #include <stdlib.h>
 
 const char *path_0 = "conv_event.csv";
-#define N 8 //Default matrix size NxN
+#define N 160 //Default matrix size NxN
 #define A(i,j) A[(i)*cols+(j)]  // row-major layout
 #define C(i,j) C[(i)*cols+(j)]  // row-major layout
 #define PROFILE_ALL_EVENTS_METRICS 0
 int counter1 = 200000;
 
-int numARows = 32;
-int numACols = 32;
-int numBCols = 32;
+int numARows = 8;
+int numACols = 8;
+int numBCols = 8;
 
 __global__ void convolution(int *A, int *C)
 {
@@ -147,9 +147,6 @@ static void compute_vecmul()
 
 static void compute_mat() {
 
-
-
-
     cudaEvent_t start, stop;
     cudaEventCreate(&start);
     cudaEventCreate(&stop);
@@ -195,93 +192,12 @@ static void compute_mat() {
 
     // dim3 threadPerBlock(BLOCK_SIZE, BLOCK_SIZE, 1);
     // dim3 blockPerGrid(ceil(numBCols/(float)BLOCK_SIZE), ceil(numACols/(float)BLOCK_SIZE), 1);
-    using namespace std;
-    CUdevice device;
-    
-    DRIVER_API_CALL(cuInit(0));
-    DRIVER_API_CALL(cuDeviceGet(&device, 0));
-    
-    #if PROFILE_ALL_EVENTS_METRICS
-    const auto event_names = cupti_profiler::available_events(device);
-    const auto metric_names = cupti_profiler::available_metrics(device);
-    #else
-      vector<string> event_names {    
-        "fb_subp0_write_sectors",
-        "l2_subp0_read_tex_hit_sectors",
-        "tex0_cache_sector_queries",
-        "inst_executed",
-        "global_store",
-        "global_load",
-        "active_warps",
-    
-        // "atom_count",
-        // "shared_load",
-        // "generic_load",
-        // "global_load",
-        // "local_load",
-        // "shared_ld_bank_conflict",
-        // "shared_ld_transactions",
-    
-    
-    
-      };
-      vector<string> metric_names {
-    
-                        
-      };
-    
-      
-      #endif
-    CUcontext context;
-    cuCtxCreate(&context, 0, 0);
-    cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
-    struct timeval ts,te;
-    
-    // for(int i=0;i<2;i++)
-    // {
-
-        for(int j=0;j<10;j++)
-        {
-        p->start();
-        gettimeofday(&ts,NULL);
-        matMul<<<64,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
-        p->stop();
-        gettimeofday(&te,NULL);
-        p->print_event_values(std::cout,ts,te);
-        
-        }
-        // for(int m=0;m<1;m++)
-        // {
-        // cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
-        // struct timeval ts,te;
-        // p->start();
-        // gettimeofday(&ts,NULL);
-        
-        // matMul<<<64,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
-
-    
-    
-        // p->stop();
-        // gettimeofday(&te,NULL);
-    
-        // p->print_event_values(std::cout,ts,te);
-        
-        // free(p);
-        // }
-    
-        // free(p);
-    // }
 
 
-//     for(int i=0;i<15;i++)
-// {
-// 	for(int j=0;j<10;j++)
-// 	{
-//     matMul<<<64,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
-//     }
-
-    
-
+    cudaEventRecord(start);
+    matMul<<<8,8>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
+    cudaEventRecord(stop);
+    cudaEventSynchronize(stop);
 
 
     cudaMemcpy(h_C, d_C, sizeC, cudaMemcpyDeviceToHost);
@@ -407,9 +323,9 @@ CUcontext context;
 cuCtxCreate(&context, 0, 0);
 
 
-for(int i=0;i<15;i++)
+for(int i=0;i<2;i++)
 {
-	for(int j=0;j<10;j++)
+	for(int j=0;j<20;j++)
 	{
 	cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
 	struct timeval ts,te;
