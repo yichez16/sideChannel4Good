@@ -280,7 +280,7 @@ free(C);
 
 int main()  
 {
-freopen(path_0,"w",stdout);
+// freopen(path_0,"w",stdout);
 
 using namespace std;
 CUdevice device;
@@ -534,6 +534,6 @@ for(int i=0;i<1;i++)
 // }
 
   
-fclose(stdout);
+// fclose(stdout);
 return 0;
 }
