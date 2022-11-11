@@ -297,7 +297,7 @@ const auto metric_names = cupti_profiler::available_metrics(device);
     "l2_subp0_read_sector_misses",
     "tex0_cache_sector_queries",
     "inst_issued0",
-    // "inst_executed",
+    "inst_executed",
     // "atom_count",
     // "inst_executed",
     // "inst_issued0",
