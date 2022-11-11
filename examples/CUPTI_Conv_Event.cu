@@ -13,7 +13,7 @@
 #include <stdlib.h>
 
 const char *path_0 = "conv_event.csv";
-#define N 160 //Default matrix size NxN
+#define N 128 //Default matrix size NxN
 #define A(i,j) A[(i)*cols+(j)]  // row-major layout
 #define C(i,j) C[(i)*cols+(j)]  // row-major layout
 #define PROFILE_ALL_EVENTS_METRICS 0
@@ -323,7 +323,7 @@ CUcontext context;
 cuCtxCreate(&context, 0, 0);
 
 
-for(int i=0;i<15;i++)
+for(int i=0;i<1;i++)
 {
 	for(int j=0;j<20;j++)
 	{
@@ -341,7 +341,7 @@ for(int i=0;i<15;i++)
 	free(p);	
 	
 	}
-	for(int m=0;m<0;m++)
+	for(int m=0;m<1;m++)
 	{
 	cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
 	struct timeval ts,te;
