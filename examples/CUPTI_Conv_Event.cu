@@ -284,7 +284,7 @@ static void compute_mat() {
 
     
 
-}
+
 
     cudaMemcpy(h_C, d_C, sizeC, cudaMemcpyDeviceToHost);
 
