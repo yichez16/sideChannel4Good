@@ -19,9 +19,9 @@ const char *path_0 = "conv_event.csv";
 #define PROFILE_ALL_EVENTS_METRICS 0
 int counter1 = 200000;
 
-int numARows = 8;
-int numACols = 8;
-int numBCols = 8;
+int numARows = 32;
+int numACols = 32;
+int numBCols = 32;
 
 __global__ void convolution(int *A, int *C)
 {
@@ -323,9 +323,9 @@ CUcontext context;
 cuCtxCreate(&context, 0, 0);
 
 
-for(int i=0;i<2;i++)
+for(int i=0;i<15;i++)
 {
-	for(int j=0;j<10;j++)
+	for(int j=0;j<20;j++)
 	{
 	cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
 	struct timeval ts,te;
