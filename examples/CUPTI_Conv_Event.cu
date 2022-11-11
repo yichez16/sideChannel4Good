@@ -13,7 +13,7 @@
 #include <stdlib.h>
 
 const char *path_0 = "conv_event.csv";
-#define N 136 //Default matrix size NxN
+#define N 160 //Default matrix size NxN
 #define A(i,j) A[(i)*cols+(j)]  // row-major layout
 #define C(i,j) C[(i)*cols+(j)]  // row-major layout
 #define PROFILE_ALL_EVENTS_METRICS 0
