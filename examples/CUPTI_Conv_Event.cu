@@ -273,7 +273,8 @@ static void compute_mat() {
     
     CUcontext context;
     cuCtxCreate(&context, 0, 0);
-
+    cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
+    struct timeval ts,te;  
     // cudaStream_t stream1, stream2;
     // cudaStreamCreate(&stream1); cudaStreamCreate(&stream2); 
 
@@ -281,8 +282,7 @@ static void compute_mat() {
 
 
     for (int j = 0; j < 5; j++) {
-        cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
-        struct timeval ts,te;
+
         p->start();
         gettimeofday(&ts,NULL);
         for (int i = 0; i < 2; i++) {
@@ -296,8 +296,8 @@ static void compute_mat() {
         // p->print_events_and_metrics(std::cout);
     }
 
-    cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
-    struct timeval ts,te;
+    // cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
+    // struct timeval ts,te;
     p->start();
     gettimeofday(&ts,NULL);
     for (int i = 0; i < 2; i++) {
