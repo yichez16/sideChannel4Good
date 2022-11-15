@@ -295,14 +295,11 @@ static void compute_mat() {
         // p->print_metric_values(std::cout,ts,te);
         // p->print_events_and_metrics(std::cout);
     }
+    cudaDeviceSynchronize();
 
     // cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
     // struct timeval ts,te;
     
-    CUcontext context;
-    cuCtxCreate(&context, 0, 0);
-    cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
-    struct timeval ts,te;  
 
     p->start();
     gettimeofday(&ts,NULL);
