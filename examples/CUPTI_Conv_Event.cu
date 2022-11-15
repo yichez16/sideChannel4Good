@@ -298,18 +298,22 @@ static void compute_mat() {
 
     // cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
     // struct timeval ts,te;
+    
+    CUcontext context;
+    cuCtxCreate(&context, 0, 0);
+    cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
+    struct timeval ts,te;  
+
     p->start();
     gettimeofday(&ts,NULL);
-    for (int m = 0; m < 2; m++) {
-        matMul<<<32,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
-        cudaMemcpy(A_d, A, sizeof(*A_d)*memorySize, cudaMemcpyHostToDevice);
+    // for (int m = 0; m < 2; m++) {
+    matMul<<<32,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
+    cudaMemcpy(A_d, A, sizeof(*A_d)*memorySize, cudaMemcpyHostToDevice);
 
         // cudaDeviceSynchronize();
 
-    }
-    // cudaDeviceReset();
+    // }
 
-    // cudaDeviceSynchronize();
     p->stop();
     gettimeofday(&te,NULL);
 
