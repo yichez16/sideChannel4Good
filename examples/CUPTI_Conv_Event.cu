@@ -280,7 +280,7 @@ static void compute_mat() {
 
 
 
-    for (int j = 0; j < 5; j++) {
+    for (int j = 0; j < 15; j++) {
 
         p->start();
         gettimeofday(&ts,NULL);
