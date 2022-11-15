@@ -274,8 +274,8 @@ static void compute_mat() {
     CUcontext context;
     cuCtxCreate(&context, 0, 0);
 
-    cudaStream_t stream1, stream2;
-    cudaStreamCreate(&stream1); cudaStreamCreate(&stream2); 
+    // cudaStream_t stream1, stream2;
+    // cudaStreamCreate(&stream1); cudaStreamCreate(&stream2); 
 
 
 
@@ -301,9 +301,9 @@ static void compute_mat() {
     p->start();
     gettimeofday(&ts,NULL);
     for (int i = 0; i < 100; i++) {
-        matMul<<<64,128, 0, stream1>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
-        convolution << <64,128, 0, stream2 >> >(A_d, C_d);//Block-thread
-        cudaDeviceSynchronize();
+        matMul<<<64,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
+        convolution << <64,128>> >(A_d, C_d);//Block-thread
+        // cudaDeviceSynchronize();
 
     }
     // cudaDeviceReset();
