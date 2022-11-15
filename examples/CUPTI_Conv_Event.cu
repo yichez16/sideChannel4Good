@@ -218,7 +218,7 @@ static void compute_mat() {
     cudaMemcpy(d_B, h_B, sizeB, cudaMemcpyHostToDevice);
 
 
-    cudaMemcpy(A_d, A, sizeof(*A_d)*memorySize, cudaMemcpyHostToDevice);
+    // cudaMemcpy(A_d, A, sizeof(*A_d)*memorySize, cudaMemcpyHostToDevice);
 
     // kernel launch
     
@@ -285,7 +285,7 @@ static void compute_mat() {
 
         p->start();
         gettimeofday(&ts,NULL);
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 2; i++) {
         matMul<<<32,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
         }
         p->stop();
@@ -300,9 +300,10 @@ static void compute_mat() {
     // struct timeval ts,te;
     p->start();
     gettimeofday(&ts,NULL);
-    for (int m = 0; m < 10; m++) {
+    for (int m = 0; m < 2; m++) {
         matMul<<<32,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
-        convolution <<<32,128>>>(A_d, C_d);//Block-thread
+        cudaMemcpy(A_d, A, sizeof(*A_d)*memorySize, cudaMemcpyHostToDevice);
+
         // cudaDeviceSynchronize();
 
     }
@@ -314,6 +315,7 @@ static void compute_mat() {
 
     p->print_event_values(std::cout,ts,te);
 
+    convolution <<<32,128>>>(A_d, C_d);//Block-thread
 
 
     
