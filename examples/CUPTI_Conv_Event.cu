@@ -277,10 +277,7 @@ static void compute_mat() {
     struct timeval ts,te;  
     // cudaStream_t stream1, stream2;
     // cudaStreamCreate(&stream1); cudaStreamCreate(&stream2); 
-    CUcontext context1;
-    cuCtxCreate(&context1, 0, 0);
-    cupti_profiler::profiler *p1= new cupti_profiler::profiler(event_names, metric_names, context1);
-    struct timeval ts1,te1;  
+
       
 
 
@@ -298,14 +295,17 @@ static void compute_mat() {
         // p->print_metric_values(std::cout,ts,te);
         // p->print_events_and_metrics(std::cout);
     }
-
+    free(p);
 
     // cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
     // struct timeval ts,te;
     
 
 
-
+    CUcontext context1;
+    cuCtxCreate(&context1, 0, 0);
+    cupti_profiler::profiler *p1= new cupti_profiler::profiler(event_names, metric_names, context1);
+    struct timeval ts1,te1;  
     p1->start();
     gettimeofday(&ts1,NULL);
     for (int m = 0; m < 2; m++) {
@@ -326,7 +326,7 @@ static void compute_mat() {
 
     // convolution <<<32,128>>>(A_d, C_d);//Block-thread
 
-
+    free(p1);
 
     
 
