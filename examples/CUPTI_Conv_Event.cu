@@ -13,15 +13,15 @@
 #include <stdlib.h>
 
 const char *path_0 = "conv_event.csv";
-#define N 32 //Default matrix size NxN
+#define N 8 //Default matrix size NxN
 #define A(i,j) A[(i)*cols+(j)]  // row-major layout
 #define C(i,j) C[(i)*cols+(j)]  // row-major layout
 #define PROFILE_ALL_EVENTS_METRICS 0
 int counter1 = 200000;
 
-int numARows = 32;
-int numACols = 32;
-int numBCols = 32;
+int numARows = 8;
+int numACols = 8;
+int numBCols = 8;
 
 
 
@@ -242,9 +242,9 @@ static void compute_mat() {
     const auto metric_names = cupti_profiler::available_metrics(device);
     #else
       vector<string> event_names {    
-        // "fb_subp0_write_sectors",
+        "fb_subp0_write_sectors",
         "l2_subp0_read_tex_hit_sectors",
-        // "tex0_cache_sector_queries",
+        "tex0_cache_sector_queries",
         "inst_executed",
         // "inst_issued0",
         "global_store",
@@ -280,7 +280,7 @@ static void compute_mat() {
 
 
 
-    for (int j = 0; j < 5; j++) {
+    for (int j = 0; j < 10; j++) {
         cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
         struct timeval ts,te;
         p->start();
@@ -295,7 +295,7 @@ static void compute_mat() {
         // p->print_metric_values(std::cout,ts,te);
         // p->print_events_and_metrics(std::cout);
     }
-    // cudaDeviceSynchronize();
+
     cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
     struct timeval ts,te;
     p->start();
