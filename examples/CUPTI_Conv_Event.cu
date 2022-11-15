@@ -294,8 +294,8 @@ static void compute_mat() {
         // p->print_metric_values(std::cout,ts,te);
         // p->print_events_and_metrics(std::cout);
     }
-    free(p);
-    cudaDeviceSynchronize();
+    // free(p);
+    // cudaDeviceSynchronize();
 
     // cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
     // struct timeval ts,te;
@@ -307,29 +307,23 @@ static void compute_mat() {
     // CUcontext context1;
     // cuCtxCreate(&context1, 0, 0);
 
+
+
+
+    for (int j = 0; j < 1; j++) {
+
     p1->start();
     gettimeofday(&ts1,NULL);
-    for (int m = 0; m < 2; m++) {
-
-        // matMul<<<32,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
-        // cudaMemcpy(A_d, A, sizeof(*A_d)*memorySize, cudaMemcpyHostToDevice);
-        // matMul<<<32,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
-        convolution <<<32,128>>>(A_d, C_d);//Block-thread
-
-        // cudaDeviceSynchronize();
-
+    for (int i = 0; i < 1; i++) {
+    matMul<<<32,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
     }
-
     p1->stop();
     gettimeofday(&te1,NULL);
 
     p1->print_event_values(std::cout,ts1,te1);
-
-    // convolution <<<32,128>>>(A_d, C_d);//Block-thread
-
-    free(p1);
-    cudaDeviceSynchronize();
-
+    // p->print_metric_values(std::cout,ts,te);
+    // p->print_events_and_metrics(std::cout);
+    }
     
 
 
