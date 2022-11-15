@@ -19,10 +19,9 @@ const char *path_0 = "conv_event.csv";
 #define PROFILE_ALL_EVENTS_METRICS 0
 int counter1 = 200000;
 
-int numARows;
-int numACols;
-int numBCols;
-numARows =  numACols =  numBCols = 64;
+int numARows = 64;
+int numACols = 64;
+int numBCols = 64;
 
 
 
