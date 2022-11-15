@@ -245,7 +245,7 @@ static void compute_mat() {
         "fb_subp0_write_sectors",
         "l2_subp0_read_tex_hit_sectors",
         "tex0_cache_sector_queries",
-        "inst_executed",
+        // "inst_executed",
         "inst_issued0",
         "global_store",
         "global_load",
