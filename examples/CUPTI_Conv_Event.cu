@@ -289,12 +289,12 @@ static void compute_mat() {
         // p->print_metric_values(std::cout,ts,te);
         // p->print_events_and_metrics(std::cout);
     }
-    cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
-	struct timeval ts,te;
+
+
     p->start();
     gettimeofday(&ts,NULL);
-    for (int i = 0; i < 200; i++) {
-        convolution << <64,128 >> >(A_d, C_d);//Block-thread
+    for (int i = 0; i < 1000; i++) {
+        convolution <<<64,128 >>>(A_d, C_d);//Block-thread
     }
     p->stop();
     gettimeofday(&te,NULL);
