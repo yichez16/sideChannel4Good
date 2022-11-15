@@ -13,7 +13,7 @@
 #include <stdlib.h>
 
 const char *path_0 = "conv_event.csv";
-#define N 300 //Default matrix size NxN
+#define N 32 //Default matrix size NxN
 #define A(i,j) A[(i)*cols+(j)]  // row-major layout
 #define C(i,j) C[(i)*cols+(j)]  // row-major layout
 #define PROFILE_ALL_EVENTS_METRICS 0
@@ -306,23 +306,25 @@ static void compute_mat() {
     cupti_profiler::profiler *p1= new cupti_profiler::profiler(event_names, metric_names, context1);
     struct timeval ts1,te1;  
 
+    // for (int m = 0; m < 1; m++) {
     p1->start();
     gettimeofday(&ts1,NULL);
-    for (int m = 0; m < 2; m++) {
+    
         // matMul<<<32,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
         // cudaMemcpy(A_d, A, sizeof(*A_d)*memorySize, cudaMemcpyHostToDevice);
-        convolution <<<32,128>>>(A_d, C_d);//Block-thread
+    matMul<<<32,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
+    convolution <<<32,128>>>(A_d, C_d);//Block-thread
 
         // cudaDeviceSynchronize();
 
-    }
+    // }
 
     p1->stop();
     gettimeofday(&te1,NULL);
 
     p1->print_event_values(std::cout,ts1,te1);
 
-    convolution <<<32,128>>>(A_d, C_d);//Block-thread
+    // convolution <<<32,128>>>(A_d, C_d);//Block-thread
 
 
 
