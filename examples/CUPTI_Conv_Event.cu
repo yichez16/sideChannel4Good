@@ -158,6 +158,30 @@ static void compute_mat() {
     size_t sizeB = numACols * numBCols * sizeof(float);
     size_t sizeC = numARows * numBCols * sizeof(float);
 
+    //Host variables
+	int A[N+2][N+2] = {};//+2 for padding matrix
+	int *C;
+    //Device variables
+	int *A_d = 0, *C_d = 0;
+	//Calculate memory size 
+	int memorySize = (N + 2) * (N + 2);
+	//Init matrix by 0
+	for (int i = 0; i < N+2; i++) {
+		for (int j = 0; j < N+2; j++) {
+			A[i][j] = 0;
+		}
+    }
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+          A[i + 1][j + 1] = rand() % 10;
+        }
+      }    
+
+    C = (int *)malloc(sizeof(*C)*memorySize);      
+
+
+
+
     // allocate host memory
     float* h_A = (float*)malloc(sizeA);
     float* h_B = (float*)malloc(sizeB);
@@ -186,9 +210,16 @@ static void compute_mat() {
     cudaMalloc((void**)&d_B, sizeB);
     cudaMalloc((void**)&d_C, sizeC);
 
+
+    cudaMalloc((void**)&A_d, sizeof(*A_d)*memorySize);
+    cudaMalloc((void**)&C_d, sizeof(*C_d)*memorySize);
+
     // transfer to GPU
     cudaMemcpy(d_A, h_A, sizeA, cudaMemcpyHostToDevice);
     cudaMemcpy(d_B, h_B, sizeB, cudaMemcpyHostToDevice);
+
+
+    cudaMemcpy(A_d, A, sizeof(*A_d)*memorySize, cudaMemcpyHostToDevice);
 
     // kernel launch
     
@@ -262,9 +293,8 @@ static void compute_mat() {
     }
     p->start();
     gettimeofday(&ts,NULL);
-    for (int i = 0; i < 100; i++) {
-    matMul<<<64,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
-    matMul<<<64,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
+    for (int i = 0; i < 200; i++) {
+        convolution << <64,128 >> >(A_d, C_d);//Block-thread
     }
     p->stop();
     gettimeofday(&te,NULL);
@@ -292,9 +322,13 @@ static void compute_mat() {
 
     cudaMemcpy(h_C, d_C, sizeC, cudaMemcpyDeviceToHost);
 
+    cudaMemcpy(C, C_d, sizeof(*C)*memorySize, cudaMemcpyDeviceToHost);
 
     free(h_A); free(h_B); free(h_C); 
     cudaFree(d_A); cudaFree(d_B); cudaFree(d_C);
+    cudaFree(C_d);
+    cudaFree(A_d);
+    free(C);
 
 }
 
