@@ -13,7 +13,7 @@
 #include <stdlib.h>
 
 const char *path_0 = "conv_event.csv";
-#define N 2048 //Default matrix size NxN
+#define N 1024 //Default matrix size NxN
 #define A(i,j) A[(i)*cols+(j)]  // row-major layout
 #define C(i,j) C[(i)*cols+(j)]  // row-major layout
 #define PROFILE_ALL_EVENTS_METRICS 0
@@ -279,7 +279,7 @@ static void compute_mat() {
     for (int j = 0; j < 5; j++) {
         p->start();
         gettimeofday(&ts,NULL);
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 50; i++) {
         matMul<<<64,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
         }
         p->stop();
@@ -289,11 +289,9 @@ static void compute_mat() {
         // p->print_metric_values(std::cout,ts,te);
         // p->print_events_and_metrics(std::cout);
     }
-
-
     p->start();
     gettimeofday(&ts,NULL);
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < 200; i++) {
         convolution <<<64,128 >>>(A_d, C_d);//Block-thread
     }
     p->stop();
