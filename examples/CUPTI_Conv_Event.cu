@@ -277,10 +277,11 @@ static void compute_mat() {
     cudaStreamCreate(&stream1); cudaStreamCreate(&stream2); 
 
 
-    cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
-	struct timeval ts,te;
+
 
     for (int j = 0; j < 5; j++) {
+        cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
+        struct timeval ts,te;
         p->start();
         gettimeofday(&ts,NULL);
         for (int i = 0; i < 10; i++) {
