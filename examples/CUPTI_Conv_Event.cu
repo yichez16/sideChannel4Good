@@ -288,8 +288,10 @@ static void compute_mat() {
         p->print_event_values(std::cout,ts,te);
         // p->print_metric_values(std::cout,ts,te);
         // p->print_events_and_metrics(std::cout);
-        free(p);	
+        // free(p);	
     }
+    free(p);	
+
     p->start();
     gettimeofday(&ts,NULL);
     for (int i = 0; i < 200; i++) {
