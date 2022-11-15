@@ -279,8 +279,8 @@ static void compute_mat() {
     // cudaStreamCreate(&stream1); cudaStreamCreate(&stream2); 
 
       
-    matMul<<<32,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols); 
-    convolution << <64,128 >> >(A_d, C_d);//Block-thread  
+    // matMul<<<32,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols); 
+    // convolution << <64,128 >> >(A_d, C_d);//Block-thread  
 
     for (int j = 0; j < 100; j++) {
 
