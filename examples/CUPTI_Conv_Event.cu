@@ -13,15 +13,15 @@
 #include <stdlib.h>
 
 const char *path_0 = "conv_event.csv";
-#define N 8 //Default matrix size NxN
+#define N 32 //Default matrix size NxN
 #define A(i,j) A[(i)*cols+(j)]  // row-major layout
 #define C(i,j) C[(i)*cols+(j)]  // row-major layout
 #define PROFILE_ALL_EVENTS_METRICS 0
 int counter1 = 200000;
 
-int numARows = 8;
-int numACols = 8;
-int numBCols = 8;
+int numARows = 32;
+int numACols = 32;
+int numBCols = 32;
 
 
 
@@ -286,7 +286,7 @@ static void compute_mat() {
         p->start();
         gettimeofday(&ts,NULL);
         for (int i = 0; i < 2; i++) {
-        matMul<<<8,8>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
+        matMul<<<256,256>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
         }
         p->stop();
         gettimeofday(&te,NULL);
@@ -301,8 +301,8 @@ static void compute_mat() {
     p->start();
     gettimeofday(&ts,NULL);
     for (int i = 0; i < 2; i++) {
-        matMul<<<8,8>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
-        convolution <<<8,8>>>(A_d, C_d);//Block-thread
+        matMul<<<256,256>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
+        convolution <<<256,256>>>(A_d, C_d);//Block-thread
         // cudaDeviceSynchronize();
 
     }
