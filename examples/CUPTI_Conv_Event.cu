@@ -218,7 +218,7 @@ static void compute_mat() {
     cudaMemcpy(d_B, h_B, sizeB, cudaMemcpyHostToDevice);
 
 
-    // cudaMemcpy(A_d, A, sizeof(*A_d)*memorySize, cudaMemcpyHostToDevice);
+    cudaMemcpy(A_d, A, sizeof(*A_d)*memorySize, cudaMemcpyHostToDevice);
 
     // kernel launch
     
@@ -278,7 +278,7 @@ static void compute_mat() {
     // cudaStream_t stream1, stream2;
     // cudaStreamCreate(&stream1); cudaStreamCreate(&stream2); 
 
-
+      
 
 
     for (int j = 0; j < 5; j++) {
