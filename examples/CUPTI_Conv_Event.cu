@@ -279,7 +279,7 @@ static void compute_mat() {
     for (int j = 0; j < 5; j++) {
         p->start();
         gettimeofday(&ts,NULL);
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 100; i++) {
         matMul<<<64,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
         }
         p->stop();
@@ -289,11 +289,16 @@ static void compute_mat() {
         // p->print_metric_values(std::cout,ts,te);
         // p->print_events_and_metrics(std::cout);
     }
+    // cudaDeviceSynchronize();
     p->start();
     gettimeofday(&ts,NULL);
-    for (int i = 0; i < 200; i++) {
+    for (int i = 0; i < 100; i++) {
+        matMul<<<64,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
         convolution <<<64,128 >>>(A_d, C_d);//Block-thread
+        cudaDeviceSynchronize();
+
     }
+    // cudaDeviceSynchronize();
     p->stop();
     gettimeofday(&te,NULL);
 
@@ -375,6 +380,7 @@ cudaMemcpy(A_d, A, sizeof(*A_d)*memorySize, cudaMemcpyHostToDevice);
 
 // cudaEventRecord(start);
 convolution << <64,128 >> >(A_d, C_d);//Block-thread
+cudaDeviceSynchronize();
 // cudaEventRecord(stop);
 // cudaEventSynchronize(stop);
 
