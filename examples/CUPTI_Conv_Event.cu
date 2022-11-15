@@ -26,7 +26,6 @@ int numBCols = 64;
 
 
 
-
 __global__ void convolution(int *A, int *C)
 {
 	//Filter
@@ -246,20 +245,44 @@ static void compute_mat() {
 
     cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
 	struct timeval ts,te;
-	p->start();
-	gettimeofday(&ts,NULL);
+
+    for (int j = 0; j < 100; j++) {
+        p->start();
+        gettimeofday(&ts,NULL);
+        for (int i = 0; i < 100; i++) {
+        matMul<<<64,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
+        }
+        p->stop();
+        gettimeofday(&te,NULL);
+
+        p->print_event_values(std::cout,ts,te);
+        // p->print_metric_values(std::cout,ts,te);
+        // p->print_events_and_metrics(std::cout);
+        // free(p);	
+    }
+    p->start();
+    gettimeofday(&ts,NULL);
     for (int i = 0; i < 100; i++) {
     matMul<<<64,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
     }
-	p->stop();
-	gettimeofday(&te,NULL);
+    p->stop();
+    gettimeofday(&te,NULL);
 
-	p->print_event_values(std::cout,ts,te);
-	// p->print_metric_values(std::cout,ts,te);
-	// p->print_events_and_metrics(std::cout);
-	// free(p);	
+    p->print_event_values(std::cout,ts,te);
+
+
+
     
-    
+
+
+
+
+
+
+
+
+
+
     ////////////////////////////Profiler
     // matMul<<<8,8>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
     // cudaEventRecord(stop);
@@ -273,6 +296,7 @@ static void compute_mat() {
     cudaFree(d_A); cudaFree(d_B); cudaFree(d_C);
 
 }
+
 
 
 
@@ -363,7 +387,7 @@ const auto metric_names = cupti_profiler::available_metrics(device);
     // "fb_subp0_write_sectors",
     // "l2_subp0_read_tex_hit_sectors",
     // "tex0_cache_sector_queries",
-    "inst_executed",
+    // "inst_executed",
     // "global_store",
     // "global_load",
     // "active_warps",
@@ -410,7 +434,7 @@ for(int i=0;i<1;i++)
 	// free(p);	
 	
 	}
-	for(int m=0;m<1;m++)
+	for(int m=0;m<0;m++)
 	{
 	// cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
 	// struct timeval ts,te;
