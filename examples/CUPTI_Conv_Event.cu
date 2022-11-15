@@ -275,23 +275,11 @@ static void compute_mat() {
     cuCtxCreate(&context, 0, 0);
     cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
     struct timeval ts,te;  
-    p->start();
-    gettimeofday(&ts,NULL);
-    matMul<<<32,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
-    p->stop();
-    gettimeofday(&te,NULL);
+
 
     cupti_profiler::profiler *p1= new cupti_profiler::profiler(event_names, metric_names, context);
     struct timeval ts1,te1;   
-    p1->start();
-    gettimeofday(&ts1,NULL);
-    matMul<<<32,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
-    convolution << <64,128 >> >(A_d, C_d);//Block-thread
-    p1->stop();
-    gettimeofday(&te1,NULL);
-    p1->print_event_values(std::cout,ts1,te1);
 
-    p->print_event_values(std::cout,ts,te);
 
     for (int j = 0; j < 5; j++) {
 
@@ -307,18 +295,6 @@ static void compute_mat() {
         // p->print_metric_values(std::cout,ts,te);
         // p->print_events_and_metrics(std::cout);
     }
-    // free(p);
-    // cudaDeviceSynchronize();
-
-    // cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
-    // struct timeval ts,te;
-    
-
- 
-
-    // CUcontext context1;
-    // cuCtxCreate(&context1, 0, 0);
-
 
 
 
