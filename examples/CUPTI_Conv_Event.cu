@@ -297,6 +297,7 @@ static void compute_mat() {
         // p->print_events_and_metrics(std::cout);
     }
     free(p);
+    cudaDeviceSynchronize();
 
     // cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
     // struct timeval ts,te;
@@ -327,6 +328,7 @@ static void compute_mat() {
     // convolution <<<32,128>>>(A_d, C_d);//Block-thread
 
     free(p1);
+    cudaDeviceSynchronize();
 
     
 
