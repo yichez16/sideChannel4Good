@@ -302,9 +302,9 @@ static void compute_mat() {
     
 
 
-    CUcontext context1;
-    cuCtxCreate(&context1, 0, 0);
-    cupti_profiler::profiler *p1= new cupti_profiler::profiler(event_names, metric_names, context1);
+    // CUcontext context1;
+    // cuCtxCreate(&context1, 0, 0);
+    cupti_profiler::profiler *p1= new cupti_profiler::profiler(event_names, metric_names, context);
     struct timeval ts1,te1;  
     p1->start();
     gettimeofday(&ts1,NULL);
@@ -312,8 +312,8 @@ static void compute_mat() {
 
         // matMul<<<32,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
         // cudaMemcpy(A_d, A, sizeof(*A_d)*memorySize, cudaMemcpyHostToDevice);
-        matMul<<<32,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
-        // convolution <<<32,128>>>(A_d, C_d);//Block-thread
+        // matMul<<<32,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
+        convolution <<<32,128>>>(A_d, C_d);//Block-thread
 
         // cudaDeviceSynchronize();
 
