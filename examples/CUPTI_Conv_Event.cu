@@ -309,8 +309,8 @@ static void compute_mat() {
     p1->start();
     gettimeofday(&ts1,NULL);
     for (int m = 0; m < 2; m++) {
-        matMul<<<32,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
-        cudaMemcpy(A_d, A, sizeof(*A_d)*memorySize, cudaMemcpyHostToDevice);
+        // matMul<<<32,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
+        // cudaMemcpy(A_d, A, sizeof(*A_d)*memorySize, cudaMemcpyHostToDevice);
         convolution <<<32,128>>>(A_d, C_d);//Block-thread
 
         // cudaDeviceSynchronize();
