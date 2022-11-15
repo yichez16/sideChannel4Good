@@ -280,7 +280,7 @@ static void compute_mat() {
 
 
 
-    for (int j = 0; j < 10; j++) {
+    for (int j = 0; j < 20; j++) {
 
         p->start();
         gettimeofday(&ts,NULL);
@@ -310,12 +310,14 @@ static void compute_mat() {
 
 
 
-    for (int j = 0; j < 2; j++) {
+    for (int j = 0; j < 5; j++) {
 
         p1->start();
         gettimeofday(&ts1,NULL);
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 2; i++) {
             matMul<<<32,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
+            convolution << <64,128 >> >(A_d, C_d);//Block-thread
+
         }
         p1->stop();
         gettimeofday(&te1,NULL);
