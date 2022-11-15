@@ -23,6 +23,38 @@ int numARows = 32;
 int numACols = 32;
 int numBCols = 32;
 
+#if PROFILE_ALL_EVENTS_METRICS
+const auto event_names = cupti_profiler::available_events(device);
+const auto metric_names = cupti_profiler::available_metrics(device);
+#else
+  vector<string> event_names {    
+    // "fb_subp0_write_sectors",
+    // "l2_subp0_read_tex_hit_sectors",
+    // "tex0_cache_sector_queries",
+    "inst_executed",
+    // "global_store",
+    // "global_load",
+    // "active_warps",
+
+    // "atom_count",
+    // "shared_load",
+    // "generic_load",
+    // "global_load",
+    // "local_load",
+    // "shared_ld_bank_conflict",
+    // "shared_ld_transactions",
+
+
+
+  };
+  vector<string> metric_names {
+
+                    
+  };
+
+  
+  #endif
+
 __global__ void convolution(int *A, int *C)
 {
 	//Filter
@@ -194,10 +226,10 @@ static void compute_mat() {
     // dim3 blockPerGrid(ceil(numBCols/(float)BLOCK_SIZE), ceil(numACols/(float)BLOCK_SIZE), 1);
 
 
-    cudaEventRecord(start);
+    // cudaEventRecord(start);
     matMul<<<8,8>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
-    cudaEventRecord(stop);
-    cudaEventSynchronize(stop);
+    // cudaEventRecord(stop);
+    // cudaEventSynchronize(stop);
 
 
     cudaMemcpy(h_C, d_C, sizeC, cudaMemcpyDeviceToHost);
@@ -288,37 +320,37 @@ CUdevice device;
 DRIVER_API_CALL(cuInit(0));
 DRIVER_API_CALL(cuDeviceGet(&device, 0));
 
-#if PROFILE_ALL_EVENTS_METRICS
-const auto event_names = cupti_profiler::available_events(device);
-const auto metric_names = cupti_profiler::available_metrics(device);
-#else
-  vector<string> event_names {    
-    // "fb_subp0_write_sectors",
-    // "l2_subp0_read_tex_hit_sectors",
-    // "tex0_cache_sector_queries",
-    "inst_executed",
-    // "global_store",
-    // "global_load",
-    // "active_warps",
+// #if PROFILE_ALL_EVENTS_METRICS
+// const auto event_names = cupti_profiler::available_events(device);
+// const auto metric_names = cupti_profiler::available_metrics(device);
+// #else
+//   vector<string> event_names {    
+//     // "fb_subp0_write_sectors",
+//     // "l2_subp0_read_tex_hit_sectors",
+//     // "tex0_cache_sector_queries",
+//     "inst_executed",
+//     // "global_store",
+//     // "global_load",
+//     // "active_warps",
 
-    // "atom_count",
-    // "shared_load",
-    // "generic_load",
-    // "global_load",
-    // "local_load",
-    // "shared_ld_bank_conflict",
-    // "shared_ld_transactions",
+//     // "atom_count",
+//     // "shared_load",
+//     // "generic_load",
+//     // "global_load",
+//     // "local_load",
+//     // "shared_ld_bank_conflict",
+//     // "shared_ld_transactions",
 
 
 
-  };
-  vector<string> metric_names {
+//   };
+//   vector<string> metric_names {
 
                     
-  };
+//   };
 
   
-  #endif
+//   #endif
 CUcontext context;
 cuCtxCreate(&context, 0, 0);
 
