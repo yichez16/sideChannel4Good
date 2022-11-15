@@ -574,7 +574,7 @@ namespace detail {
           else
             s << (ull_t)m_kernel_data[k.first].m_event_values[i]
               << ","
-              << ts.tv_sec*1000000 + ts.tv_usec - 1668493698733160
+              << ts.tv_sec*1000000 + ts.tv_usec-1668493698733160
               << ","
               << te.tv_usec - ts.tv_usec
               // << ts.tv_sec*1000000 + ts.tv_usec
