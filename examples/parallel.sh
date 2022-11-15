@@ -1,1 +1,1 @@
-./conv_event > 1.csv & ./conv_event > 2.csv & ./conv_event > 3.csv & ./conv_event > 4.csv & ./conv_event > 5.csv & ./conv_event > 6.csv & ./conv_event > 7.csv & ./conv_event > 8.csv & ./conv_event > 9.csv & ./conv_event > 10.csv
+./conv_event >> 1.csv & ./conv_event >> 1.csv &./conv_event >> 1.csv &./conv_event >> 1.csv &./conv_event >> 1.csv &./conv_event >> 1.csv &./conv_event >> 1.csv &./conv_event >> 1.csv &./conv_event >> 1.csv &./conv_event >> 1.csv &./conv_event >> 1.csv 
