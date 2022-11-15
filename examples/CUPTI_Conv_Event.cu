@@ -275,6 +275,8 @@ static void compute_mat() {
     cuCtxCreate(&context, 0, 0);
     cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
     struct timeval ts,te;  
+
+
     // cudaStream_t stream1, stream2;
     // cudaStreamCreate(&stream1); cudaStreamCreate(&stream2); 
 
@@ -282,7 +284,17 @@ static void compute_mat() {
     // matMul<<<32,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols); 
     // convolution << <64,128 >> >(A_d, C_d);//Block-thread  
 
-    for (int j = 0; j < 100; j++) {
+    p->start();
+    gettimeofday(&ts,NULL);
+    for (int i = 0; i < 2; i++) {
+        matMul<<<32,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
+    }
+    p->stop();
+    gettimeofday(&te,NULL);
+
+    p->print_event_values(std::cout,ts,te);
+
+    for (int j = 0; j < 5; j++) {
 
         p->start();
         gettimeofday(&ts,NULL);
@@ -303,16 +315,27 @@ static void compute_mat() {
     // struct timeval ts,te;
     
 
-    cupti_profiler::profiler *p1= new cupti_profiler::profiler(event_names, metric_names, context);
-    struct timeval ts1,te1;    
+ 
 
     // CUcontext context1;
     // cuCtxCreate(&context1, 0, 0);
 
 
+    cupti_profiler::profiler *p1= new cupti_profiler::profiler(event_names, metric_names, context);
+    struct timeval ts1,te1;   
+    p1->start();
+    gettimeofday(&ts1,NULL);
+    for (int i = 0; i < 2; i++) {
+        matMul<<<32,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
+        convolution << <64,128 >> >(A_d, C_d);//Block-thread
 
+    }
+    p1->stop();
+    gettimeofday(&te1,NULL);
 
-    for (int j = 0; j < 5; j++) {
+    p1->print_event_values(std::cout,ts1,te1);
+
+    for (int j = 0; j < 2; j++) {
 
         p1->start();
         gettimeofday(&ts1,NULL);
