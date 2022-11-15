@@ -282,7 +282,7 @@ static void compute_mat() {
     matMul<<<32,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols); 
     convolution << <64,128 >> >(A_d, C_d);//Block-thread  
 
-    for (int j = 0; j < 20; j++) {
+    for (int j = 0; j < 100; j++) {
 
         p->start();
         gettimeofday(&ts,NULL);
