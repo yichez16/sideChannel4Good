@@ -288,10 +288,9 @@ static void compute_mat() {
         p->print_event_values(std::cout,ts,te);
         // p->print_metric_values(std::cout,ts,te);
         // p->print_events_and_metrics(std::cout);
-        // free(p);	
     }
-    free(p);	
-
+    cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
+	struct timeval ts,te;
     p->start();
     gettimeofday(&ts,NULL);
     for (int i = 0; i < 200; i++) {
@@ -302,7 +301,6 @@ static void compute_mat() {
 
     p->print_event_values(std::cout,ts,te);
 
-    free(p);	
 
 
     
