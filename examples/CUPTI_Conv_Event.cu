@@ -283,7 +283,7 @@ static void compute_mat() {
     for (int j = 0; j < 5; j++) {
         p->start();
         gettimeofday(&ts,NULL);
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 10; i++) {
         matMul<<<64,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
         }
         p->stop();
