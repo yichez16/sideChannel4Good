@@ -1,1 +1,1 @@
-./conv_event >> 1.csv & ./conv_event >> 1.csv 
+./conv_event >> 1.csv & ./conv_event >> 1.csv & ./conv_event >> 1.csv  & ./conv_event >> 1.csv & ./conv_event >> 1.csv & ./conv_event >> 1.csv 
