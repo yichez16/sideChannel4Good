@@ -298,7 +298,7 @@ static void compute_mat() {
     gettimeofday(&ts,NULL);
     for (int i = 0; i < 200; i++) {
         matMul<<<64,128, 0, stream1>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
-        convolution <<<1024,128, 0, stream2>>>(A_d, C_d);//Block-thread
+        convolution <<<128,128, 0, stream2>>>(A_d, C_d);//Block-thread
         cudaDeviceSynchronize();
 
     }
