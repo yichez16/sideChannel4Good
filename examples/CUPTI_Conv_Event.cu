@@ -13,15 +13,15 @@
 #include <stdlib.h>
 
 const char *path_0 = "conv_event.csv";
-#define N 256 //Default matrix size NxN
+#define N 1024 //Default matrix size NxN
 #define A(i,j) A[(i)*cols+(j)]  // row-major layout
 #define C(i,j) C[(i)*cols+(j)]  // row-major layout
 #define PROFILE_ALL_EVENTS_METRICS 0
 int counter1 = 200000;
 
-int numARows = 64;
-int numACols = 64;
-int numBCols = 64;
+int numARows = int numACols = int numBCols = 64;
+// int numACols;
+// int numBCols;
 
 
 
@@ -277,7 +277,7 @@ static void compute_mat() {
     cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
 	struct timeval ts,te;
 
-    for (int j = 0; j < 100; j++) {
+    for (int j = 0; j < 5; j++) {
         p->start();
         gettimeofday(&ts,NULL);
         for (int i = 0; i < 100; i++) {
