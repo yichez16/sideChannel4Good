@@ -246,6 +246,7 @@ static void compute_mat() {
         "l2_subp0_read_tex_hit_sectors",
         "tex0_cache_sector_queries",
         "inst_executed",
+        "inst_issued0",
         "global_store",
         "global_load",
         "active_warps",
