@@ -13,15 +13,15 @@
 #include <stdlib.h>
 
 const char *path_0 = "conv_event.csv";
-#define N 270 //Default matrix size NxN
+#define N 256 //Default matrix size NxN
 #define A(i,j) A[(i)*cols+(j)]  // row-major layout
 #define C(i,j) C[(i)*cols+(j)]  // row-major layout
 #define PROFILE_ALL_EVENTS_METRICS 0
 int counter1 = 200000;
 
-int numARows = 32;
-int numACols = 32;
-int numBCols = 32;
+int numARows = 64;
+int numACols = 64;
+int numBCols = 64;
 
 
 
@@ -217,9 +217,9 @@ static void compute_mat() {
         // "l2_subp0_read_tex_hit_sectors",
         // "tex0_cache_sector_queries",
         "inst_executed",
-        // "global_store",
-        // "global_load",
-        // "active_warps",
+        "global_store",
+        "global_load",
+        "active_warps",
     
         // "atom_count",
         // "shared_load",
@@ -248,7 +248,7 @@ static void compute_mat() {
 	struct timeval ts,te;
 	p->start();
 	gettimeofday(&ts,NULL);
-    matMul<<<8,8>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
+    matMul<<<64,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
 	p->stop();
 	gettimeofday(&te,NULL);
 
