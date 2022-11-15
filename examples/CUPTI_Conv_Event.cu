@@ -312,17 +312,17 @@ static void compute_mat() {
 
     for (int j = 0; j < 1; j++) {
 
-    p1->start();
-    gettimeofday(&ts1,NULL);
-    for (int i = 0; i < 1; i++) {
-    matMul<<<32,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
-    }
-    p1->stop();
-    gettimeofday(&te1,NULL);
+        p->start();
+        gettimeofday(&ts,NULL);
+        for (int i = 0; i < 1; i++) {
+        matMul<<<32,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
+        }
+        p->stop();
+        gettimeofday(&te,NULL);
 
-    p1->print_event_values(std::cout,ts1,te1);
-    // p->print_metric_values(std::cout,ts,te);
-    // p->print_events_and_metrics(std::cout);
+        p->print_event_values(std::cout,ts,te);
+        // p->print_metric_values(std::cout,ts,te);
+        // p->print_events_and_metrics(std::cout);
     }
     
 
