@@ -277,8 +277,7 @@ static void compute_mat() {
     struct timeval ts,te;  
 
 
-    cupti_profiler::profiler *p1= new cupti_profiler::profiler(event_names, metric_names, context);
-    struct timeval ts1,te1;   
+
 
 
     for (int j = 0; j < 5; j++) {
@@ -297,7 +296,8 @@ static void compute_mat() {
     }
 
 
-
+    cupti_profiler::profiler *p1= new cupti_profiler::profiler(event_names, metric_names, context);
+    struct timeval ts1,te1;   
     for (int j = 0; j < 2; j++) {
 
         p1->start();
