@@ -319,7 +319,7 @@ static void compute_mat() {
     for (int countertest = 100; countertest < 5000; countertest+=100){
     gettimeofday(&ts2,NULL); 
     int x1 =0;
-    for(int i = 0; i< 1000; i++){
+    for(int i = 0; i< 100; i++){
 
         gettimeofday(&ts,NULL);
         for (int j = 0; j < countertest; j++) {
