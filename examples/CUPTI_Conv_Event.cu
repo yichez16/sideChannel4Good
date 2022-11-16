@@ -275,10 +275,11 @@ static void compute_mat() {
     cuCtxCreate(&context, 0, 0);
     cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
     struct timeval ts,te;  
+    struct timeval ts2,te2;  
 
 
 
-
+     
 
     for (int j = 0; j < 1; j++) {
 
@@ -290,7 +291,7 @@ static void compute_mat() {
         p->stop();
         gettimeofday(&te,NULL);
 
-        p->print_event_values(std::cout,ts,te);
+        // p->print_event_values(std::cout,ts,te);
         // p->print_metric_values(std::cout,ts,te);
         // p->print_events_and_metrics(std::cout);
     }
@@ -310,30 +311,33 @@ static void compute_mat() {
         p1->stop();
         gettimeofday(&te1,NULL);
 
-        p1->print_event_values(std::cout,ts1,te1);
+        // p1->print_event_values(std::cout,ts1,te1);
         // p->print_metric_values(std::cout,ts,te);
         // p->print_events_and_metrics(std::cout);
     }
     
-    for(int i = 0; i< 1; i++){
 
-    
-        for (int j = 0; j < 0; j++) {
+    gettimeofday(&ts2,NULL); 
+    for(int i = 0; i< 1000; i++){
+
+        gettimeofday(&ts,NULL);
+        for (int j = 0; j < 100; j++) {
 
             p->start();
-            gettimeofday(&ts,NULL);
+            // gettimeofday(&ts,NULL);
             for (int i = 0; i < 1; i++) {
                 matMul<<<32,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
             }
             p->stop();
-            gettimeofday(&te,NULL);
+            // gettimeofday(&te,NULL);
 
-            p->print_event_values(std::cout,ts,te);
+            // p->print_event_values(std::cout,ts,te);
             // p->print_metric_values(std::cout,ts,te);
             // p->print_events_and_metrics(std::cout);
         }
+        gettimeofday(&te,NULL);
 
-        for (int j = 0; j <10000; j++) {
+        for (int j = 0; j <1; j++) {
 
             p1->start();
             gettimeofday(&ts1,NULL);
@@ -344,11 +348,14 @@ static void compute_mat() {
             }
             p1->stop();
             gettimeofday(&te1,NULL);
-            p1->print_event_values(std::cout,ts1,te1);
+            // p1->print_event_values(std::cout,ts1,te1);
             // p->print_metric_values(std::cout,ts,te);
             // p->print_events_and_metrics(std::cout);
         }
     }
+    gettimeofday(&te2,NULL); 
+    cout << "Relative overhead" << (te2.tv_sec - ts2.tv_sec)*1000000 + te2.tv_usec - ts2.tv_usec/(1000*((te.tv_sec - ts.tv_sec)*1000000 + te.tv_usec - ts.tv_usec));
+
 
 
 
