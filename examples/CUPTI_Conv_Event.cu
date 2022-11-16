@@ -318,7 +318,7 @@ static void compute_mat() {
     
 
     gettimeofday(&ts2,NULL); 
-    for(int i = 0; i< 1000; i++){
+    for(int i = 0; i< 1; i++){
 
         gettimeofday(&ts,NULL);
         for (int j = 0; j < 100; j++) {
@@ -354,7 +354,7 @@ static void compute_mat() {
         }
     }
     gettimeofday(&te2,NULL); 
-    cout << "Relative overhead: " << ((te2.tv_sec - ts2.tv_sec)*1000000 + te2.tv_usec - ts2.tv_usec)/(1000*((te.tv_sec - ts.tv_sec)*1000000 + te.tv_usec - ts.tv_usec));
+    cout << "Relative overhead: " << ((te2.tv_sec - ts2.tv_sec)*1000000 + te2.tv_usec - ts2.tv_usec)/(((te.tv_sec - ts.tv_sec)*1000000 + te.tv_usec - ts.tv_usec));
     printf("\n");
 
 
