@@ -315,10 +315,10 @@ static void compute_mat() {
         // p->print_events_and_metrics(std::cout);
     }
     
-    for(int i = 0; i< 20; i++){
+    for(int i = 0; i< 1; i++){
 
     
-        for (int j = 0; j < 20; j++) {
+        for (int j = 0; j < 5000; j++) {
 
             p->start();
             gettimeofday(&ts,NULL);
@@ -333,7 +333,7 @@ static void compute_mat() {
             // p->print_events_and_metrics(std::cout);
         }
 
-        for (int j = 0; j < 0; j++) {
+        for (int j = 0; j < 1; j++) {
 
             p1->start();
             gettimeofday(&ts1,NULL);
