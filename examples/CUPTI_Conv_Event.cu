@@ -357,8 +357,8 @@ static void compute_mat() {
     // cout << "Relative overhead: " << ((te2.tv_sec - ts2.tv_sec)*1000000 + te2.tv_usec - ts2.tv_usec)
     //     << ","
     //     << 1000*(((te.tv_sec - ts.tv_sec)*1000000 + te.tv_usec - ts.tv_usec));
-    float overhead =  ((te2.tv_sec - ts2.tv_sec)*1000000 + te2.tv_usec - ts2.tv_usec)/(1000*(((te.tv_sec - ts.tv_sec)*1000000 + te.tv_usec - ts.tv_usec)));   
-    printf(overhead);
+    float overhead1 =  ((te2.tv_sec - ts2.tv_sec)*1000000 + te2.tv_usec - ts2.tv_usec)/(1000*(((te.tv_sec - ts.tv_sec)*1000000 + te.tv_usec - ts.tv_usec)));   
+    cout << overhead1;
     printf("\n");
 
 
