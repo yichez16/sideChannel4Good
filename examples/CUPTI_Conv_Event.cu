@@ -316,12 +316,12 @@ static void compute_mat() {
         // p->print_events_and_metrics(std::cout);
     }
     
-
+    for (int countertest = 10; countertest < 1000; countertest++){
     gettimeofday(&ts2,NULL); 
     for(int i = 0; i< 1000; i++){
 
         gettimeofday(&ts,NULL);
-        for (int j = 0; j < 100; j++) {
+        for (int j = 0; j < countertest; j++) {
 
             p->start();
             // gettimeofday(&ts,NULL);
@@ -358,10 +358,10 @@ static void compute_mat() {
         << ","
         << 1000*(((te.tv_sec - ts.tv_sec)*1000000 + te.tv_usec - ts.tv_usec));
         << ","
-        << "Frequency: " << 1000/((te2.tv_sec - ts2.tv_sec)+ (te2.tv_usec - ts2.tv_usec)/1000000)
+        // << "Frequency: " << 1000/((te2.tv_sec - ts2.tv_sec)+ (te2.tv_usec - ts2.tv_usec)/1000000)
     // float overhead1 =  ((te2.tv_sec - ts2.tv_sec)*1000000 + te2.tv_usec - ts2.tv_usec)/(1000*(((te.tv_sec - ts.tv_sec)*1000000 + te.tv_usec - ts.tv_usec)));   
     printf( "\n" );
-
+    }
 
 
 
