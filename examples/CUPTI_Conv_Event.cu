@@ -318,6 +318,7 @@ static void compute_mat() {
     
     for (int countertest = 10; countertest < 1000; countertest++){
     gettimeofday(&ts2,NULL); 
+    int x1 =0;
     for(int i = 0; i< 1000; i++){
 
         gettimeofday(&ts,NULL);
@@ -334,6 +335,7 @@ static void compute_mat() {
             // p->print_event_values(std::cout,ts,te);
             // p->print_metric_values(std::cout,ts,te);
             // p->print_events_and_metrics(std::cout);
+            x1 += (te.tv_sec - ts.tv_sec)*1000000 + te.tv_usec - ts.tv_usec;
         }
         gettimeofday(&te,NULL);
 
@@ -356,7 +358,7 @@ static void compute_mat() {
     gettimeofday(&te2,NULL); 
     cout << "Relative overhead: " << ((te2.tv_sec - ts2.tv_sec)*1000000 + te2.tv_usec - ts2.tv_usec)
         << ","
-        << countertest*1000*(((te.tv_sec - ts.tv_sec)*1000000 + te.tv_usec - ts.tv_usec));
+        << x1;
         // << ","
         // << "Frequency: " << 1000/((te2.tv_sec - ts2.tv_sec)+ (te2.tv_usec - ts2.tv_usec)/1000000);
     // float overhead1 =  ((te2.tv_sec - ts2.tv_sec)*1000000 + te2.tv_usec - ts2.tv_usec)/(1000*(((te.tv_sec - ts.tv_sec)*1000000 + te.tv_usec - ts.tv_usec)));   
