@@ -342,6 +342,7 @@ static void compute_mat() {
                 convolution << <64,128 >> >(A_d, C_d);//Block-thread
 
             }
+            
             p1->stop();
             gettimeofday(&te1,NULL);
 
