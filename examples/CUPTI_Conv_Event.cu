@@ -316,7 +316,7 @@ static void compute_mat() {
         // p->print_events_and_metrics(std::cout);
     }
     
-    for (int countertest = 10; countertest < 1000; countertest++){
+    for (int countertest = 10; countertest < 5000; countertest+=10){
     gettimeofday(&ts2,NULL); 
     int x1 =0;
     for(int i = 0; i< 1000; i++){
@@ -356,7 +356,7 @@ static void compute_mat() {
         }
     }
     gettimeofday(&te2,NULL); 
-    cout << "Relative overhead: " << ((te2.tv_sec - ts2.tv_sec)*1000000 + te2.tv_usec - ts2.tv_usec)
+    cout << ((te2.tv_sec - ts2.tv_sec)*1000000 + te2.tv_usec - ts2.tv_usec)
         << ","
         << x1;
         // << ","
