@@ -335,10 +335,10 @@ static void compute_mat() {
             // p->print_event_values(std::cout,ts,te);
             // p->print_metric_values(std::cout,ts,te);
             // p->print_events_and_metrics(std::cout);
-            x1 += (te.tv_sec - ts.tv_sec)*1000000 + te.tv_usec - ts.tv_usec;
+            
         }
         gettimeofday(&te,NULL);
-
+        x1 += (te.tv_sec - ts.tv_sec)*1000000 + te.tv_usec - ts.tv_usec;
         for (int j = 0; j <1; j++) {
 
             p1->start();
