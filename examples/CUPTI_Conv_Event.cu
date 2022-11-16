@@ -358,7 +358,7 @@ static void compute_mat() {
     //     << ","
     //     << 1000*(((te.tv_sec - ts.tv_sec)*1000000 + te.tv_usec - ts.tv_usec));
     float overhead1 =  ((te2.tv_sec - ts2.tv_sec)*1000000 + te2.tv_usec - ts2.tv_usec)/(1000*(((te.tv_sec - ts.tv_sec)*1000000 + te.tv_usec - ts.tv_usec)));   
-    printf( "%6.4lf\n", overhead1 );
+    printf( "%g\n", overhead1 );
 
 
 
