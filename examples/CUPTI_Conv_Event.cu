@@ -333,7 +333,7 @@ static void compute_mat() {
             // p->print_events_and_metrics(std::cout);
         }
 
-        for (int j = 0; j < 1; j++) {
+        for (int j = 0; j < 0; j++) {
 
             p1->start();
             gettimeofday(&ts1,NULL);
