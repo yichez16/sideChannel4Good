@@ -316,10 +316,10 @@ static void compute_mat() {
         // p->print_events_and_metrics(std::cout);
     }
     
-    for (int countertest = 100; countertest < 5000; countertest+=100){
+    for (int countertest = 20; countertest < 5000; countertest+=20){
     gettimeofday(&ts2,NULL); 
     int x1 =0;
-    for(int i = 0; i< 100; i++){
+    for(int i = 0; i< 10; i++){
 
         gettimeofday(&ts,NULL);
         for (int j = 0; j < countertest; j++) {
