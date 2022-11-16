@@ -354,7 +354,9 @@ static void compute_mat() {
         }
     }
     gettimeofday(&te2,NULL); 
-    cout << "Relative overhead: " << ((te2.tv_sec - ts2.tv_sec)*1000000 + te2.tv_usec - ts2.tv_usec)/(((te.tv_sec - ts.tv_sec)*1000000 + te.tv_usec - ts.tv_usec));
+    cout << "Relative overhead: " << ((te2.tv_sec - ts2.tv_sec)*1000000 + te2.tv_usec - ts2.tv_usec)
+        << ","
+        << (((te.tv_sec - ts.tv_sec)*1000000 + te.tv_usec - ts.tv_usec));
     printf("\n");
 
 
