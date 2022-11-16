@@ -318,7 +318,7 @@ static void compute_mat() {
     for(int i = 0; i< 20; i++){
 
     
-        for (int j = 0; j < 1000; j++) {
+        for (int j = 0; j < 5000; j++) {
 
             p->start();
             gettimeofday(&ts,NULL);
