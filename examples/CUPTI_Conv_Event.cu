@@ -344,7 +344,6 @@ static void compute_mat() {
             }
             p1->stop();
             gettimeofday(&te1,NULL);
-
             p1->print_event_values(std::cout,ts1,te1);
             // p->print_metric_values(std::cout,ts,te);
             // p->print_events_and_metrics(std::cout);
