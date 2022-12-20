@@ -360,8 +360,9 @@ int main(int argc, char **argv)
         {
             compute_mat(stride, Verbose);
         }
+        // compute_mat(stride, Verbose);
         fclose(stdout);
-        compute_mat(stride, Verbose);
+        
     }
 
         
