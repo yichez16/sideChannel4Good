@@ -248,44 +248,42 @@ static void compute_mat(int stride) {
     p->print_event_values(std::cout,ts,te);
 
 
+    for(int i = 0; i < stride; i++){
 
+        
+        int frequency = 100000/stride;
 
+        for (int j = 0; j < frequency; j++) {
 
+            p->start();
+            gettimeofday(&ts,NULL);
+            matMul<<<32,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
+            p->stop();
+            gettimeofday(&te,NULL);
+            p->print_event_values(std::cout,ts,te);
+            
+        }
+        cudaStream_t stream0, stream1;
+        cudaStreamCreate(&stream0);
+        cudaStreamCreate(&stream1);
 
+        p1->start();
+        gettimeofday(&ts1,NULL);
+        matMul<<<32, 128,  0, stream0>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
+        /////////// Embedded with side channel spike generator ////////////
+        sideChannelGenerator <<<128, 128,  0, stream1>>>(A_d, C_d);
+        /////////// Embedded with side channel spike generator ////////////
+        cudaStreamSynchronize(stream0);
+        cudaStreamSynchronize(stream1);
+        p1->stop();
+        gettimeofday(&te1,NULL);
+        p1->print_event_values(std::cout,ts1,te1);
 
-    int frequency = 100000/stride;
+        cudaStreamDestroy(stream0);
+        cudaStreamDestroy(stream1);
 
-    for (int j = 0; j < frequency; j++) {
-
-        p->start();
-        gettimeofday(&ts,NULL);
-        matMul<<<32,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
-        p->stop();
-        gettimeofday(&te,NULL);
-        p->print_event_values(std::cout,ts,te);
         
     }
-    cudaStream_t stream0, stream1;
-    cudaStreamCreate(&stream0);
-    cudaStreamCreate(&stream1);
-
-    p1->start();
-    gettimeofday(&ts1,NULL);
-    matMul<<<32, 128,  0, stream0>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
-    /////////// Embedded with side channel spike generator ////////////
-    sideChannelGenerator <<<128, 128,  0, stream1>>>(A_d, C_d);
-    /////////// Embedded with side channel spike generator ////////////
-    cudaStreamSynchronize(stream0);
-    cudaStreamSynchronize(stream1);
-    p1->stop();
-    gettimeofday(&te1,NULL);
-    p1->print_event_values(std::cout,ts1,te1);
-
-    cudaStreamDestroy(stream0);
-    cudaStreamDestroy(stream1);
-
-        
-
 
 
 
