@@ -12,7 +12,7 @@
 #include "device_launch_parameters.h"
 #include <stdlib.h>
 
-const char *path_0 = "conv_event.csv";
+const char *path_0 = "CUPTI_counter.csv";
 #define N 25 //Default matrix size NxN
 #define A(i,j) A[(i)*cols+(j)]  // row-major layout
 #define C(i,j) C[(i)*cols+(j)]  // row-major layout
@@ -349,6 +349,7 @@ int main(int argc, char **argv)
         }
     }
     else{
+        printf("Save to file CUPTI_counter.csv\n");
         freopen(path_0,"w",stdout);
         for(int j=0;j<5;j++)
         {
