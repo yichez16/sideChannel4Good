@@ -85,7 +85,9 @@ static void compute() {
 
 
     cudaEventRecord(start);
+    for(int i = 0 ; i<10; i++){
     matMul<<<16,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
+    }
     cudaEventRecord(stop);
     cudaEventSynchronize(stop);
 
@@ -101,10 +103,8 @@ static void compute() {
  int main()  
  {
   
- for(int j=0;j<counter1;j++)
- {
+ 
    compute();
- }
  
  
  
