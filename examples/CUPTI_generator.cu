@@ -258,8 +258,7 @@ static void compute_mat() {
 
 
     
-    p->start();
-    gettimeofday(&ts,NULL);
+
 
     cudaMalloc((void**)&d_A, sizeA);
     cudaMalloc((void**)&d_B, sizeB);
@@ -268,26 +267,19 @@ static void compute_mat() {
 
     cudaMalloc((void**)&A_d, sizeof(*A_d)*memorySize);
     cudaMalloc((void**)&C_d, sizeof(*C_d)*memorySize);
-    p->stop();
-    gettimeofday(&te,NULL);
 
-    p->print_event_values(std::cout,ts,te);
 
     /////////////// transfer to GPU/////////////////////////////
 
 
-    p->start();
-    gettimeofday(&ts,NULL);
+
     cudaMemcpy(d_A, h_A, sizeA, cudaMemcpyHostToDevice);
     cudaMemcpy(d_B, h_B, sizeB, cudaMemcpyHostToDevice);
 
 
     cudaMemcpy(A_d, A, sizeof(*A_d)*memorySize, cudaMemcpyHostToDevice);
 
-    p->stop();
-    gettimeofday(&te,NULL);
 
-    p->print_event_values(std::cout,ts,te);
 
 
     // kernel launch 
@@ -370,7 +362,7 @@ static void compute_mat() {
 
     ////////////////////////////Profiler
 
-    p->start();
+
     gettimeofday(&ts,NULL);
     cudaMemcpy(h_C, d_C, sizeC, cudaMemcpyDeviceToHost);
 
@@ -381,10 +373,6 @@ static void compute_mat() {
     cudaFree(C_d);
     cudaFree(A_d);
     free(C);
-    p->stop();
-    gettimeofday(&te,NULL);
-
-    p->print_event_values(std::cout,ts,te);
 
 }
 
