@@ -357,7 +357,7 @@ int main(int argc, char **argv)
         printf("Save to file CUPTI_counter.csv\n");
         compute_mat(stride, Verbose);
         freopen(path_0,"w",stdout);
-        for(int j=0;j<4;j++)
+        for(int j=0;j<2;j++)
         {
             compute_mat(stride, Verbose);
         }
