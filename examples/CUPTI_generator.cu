@@ -317,7 +317,7 @@ static void compute_mat(int stride) {
 
 
 
-int main()  
+int main(int argc, char **argv)  
 {
     int stride;
     bool Verbose;
