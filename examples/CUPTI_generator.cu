@@ -95,53 +95,52 @@ vecMul(const int *A, const int *B, int *C, int numElements)
 
 static void compute_mat(int stride) {
 
-        ////////////////////////////Profiler//////////////////////////////////////////
+    ////////////////////////////Profiler//////////////////////////////////////////
 
-        using namespace std;
-        CUdevice device;
+    using namespace std;
+    CUdevice device;
+    
+    DRIVER_API_CALL(cuInit(0));
+    DRIVER_API_CALL(cuDeviceGet(&device, 0));
+    
+    
+    #if PROFILE_ALL_EVENTS_METRICS
+    const auto event_names = cupti_profiler::available_events(device);
+    const auto metric_names = cupti_profiler::available_metrics(device);
+    #else
+        vector<string> event_names {    
+        // "fb_subp0_write_sectors",
+        // "l2_subp0_read_tex_hit_sectors",
+        // "tex0_cache_sector_queries",
+        // "inst_executed",
+        // // "inst_issued0",
+        // "global_store",
+        // "global_load",
+        "active_warps",
+    
+        // "atom_count",
+        // "shared_load",
+        // "generic_load",
+        // "global_load",
+        // "local_load",
+        // "shared_ld_bank_conflict",
+        // "shared_ld_transactions",
+    
+    
+    
+        };
+        vector<string> metric_names {
+    
+                        
+        };
         
-        DRIVER_API_CALL(cuInit(0));
-        DRIVER_API_CALL(cuDeviceGet(&device, 0));
-        
-        
-        #if PROFILE_ALL_EVENTS_METRICS
-        const auto event_names = cupti_profiler::available_events(device);
-        const auto metric_names = cupti_profiler::available_metrics(device);
-        #else
-          vector<string> event_names {    
-            // "fb_subp0_write_sectors",
-            // "l2_subp0_read_tex_hit_sectors",
-            // "tex0_cache_sector_queries",
-            // "inst_executed",
-            // // "inst_issued0",
-            // "global_store",
-            // "global_load",
-            "active_warps",
-        
-            // "atom_count",
-            // "shared_load",
-            // "generic_load",
-            // "global_load",
-            // "local_load",
-            // "shared_ld_bank_conflict",
-            // "shared_ld_transactions",
-        
-        
-        
-          };
-          vector<string> metric_names {
-        
-                            
-          };
-          
-          #endif
-        
-        
-        
-        CUcontext context;
-        cuCtxCreate(&context, 0, 0);
-        cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
-        struct timeval ts,te;  
+        #endif
+    
+    
+    
+    CUcontext context;
+    cuCtxCreate(&context, 0, 0);
+
           
 
 
@@ -230,7 +229,8 @@ static void compute_mat(int stride) {
     // kernel launch 
     
 
-
+    cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
+    struct timeval ts,te;  
     p->start();
     gettimeofday(&ts,NULL);
     matMul<<<32,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
@@ -238,20 +238,21 @@ static void compute_mat(int stride) {
     gettimeofday(&te,NULL);
     p->print_event_values(std::cout,ts,te);
 
+
+
+
+    cupti_profiler::profiler *p1= new cupti_profiler::profiler(event_names, metric_names, context);
+    struct timeval ts1,te1;   
     p1->start();
     gettimeofday(&ts1,NULL);
     matMul<<<32, 128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
-    /////////// Embedded with side channel spike generator ////////////
-    sideChannelGenerator <<<64, 128 >>>(A_d, C_d);
-    /////////// Embedded with side channel spike generator ////////////
     p1->stop();
     gettimeofday(&te1,NULL);
     p1->print_event_values(std::cout,ts1,te1);
 
 
-    cupti_profiler::profiler *p1= new cupti_profiler::profiler(event_names, metric_names, context);
-    struct timeval ts1,te1;   
     int frequency = 100000/stride;
+
     for (int j = 0; j < frequency; j++) {
 
         p->start();
