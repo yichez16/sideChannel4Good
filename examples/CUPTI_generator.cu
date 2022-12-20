@@ -264,20 +264,29 @@ static void compute_mat(int stride) {
         p->print_event_values(std::cout,ts,te);
         
     }
-    
+    cudaStream_t stream0, stream1;
+    cudaStreamCreate(&stream0);
+    cudaStreamCreate(&stream1);
 
     p1->start();
     gettimeofday(&ts1,NULL);
-    matMul<<<32, 128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
+    matMul<<<32, 128,  0, stream0>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
     /////////// Embedded with side channel spike generator ////////////
-    sideChannelGenerator <<<128, 128>>>(A_d, C_d);
-    sideChannelGenerator <<<128, 128>>>(A_d, C_d);
+    sideChannelGenerator <<<128, 128,  0, stream1>>>(A_d, C_d);
+    // sideChannelGenerator <<<128, 128>>>(A_d, C_d);
 
+    cudaStreamSynchronize(stream0);
+    cudaStreamSynchronize(stream1);
     /////////// Embedded with side channel spike generator ////////////
     p1->stop();
     gettimeofday(&te1,NULL);
     p1->print_event_values(std::cout,ts1,te1);
+
+    cudaStreamDestroy(streams0);
+    cudaStreamDestroy(streams1);
+
         
+
 
 
 
