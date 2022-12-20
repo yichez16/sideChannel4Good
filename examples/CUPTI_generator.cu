@@ -99,53 +99,6 @@ initVec(int *vec, int n)
 }
 
 
-static void compute_vecmul()
- {
-    size_t size = numARows * sizeof(int);
-
-    int *h_A, *h_B, *h_C;
-    int *d_A, *d_B, *d_C;
-    
-    // cudaEvent_t start, stop;
-    // cudaEventCreate(&start);
-    // cudaEventCreate(&stop);
-    
-    // Allocate input vectors h_A and h_B in host memory
-    h_A = (int*)malloc(size);
-    h_B = (int*)malloc(size);
-    h_C = (int*)malloc(size);
-
-    // Initialize input vectors
-    initVec(h_A, numARows);
-    initVec(h_B, numARows);
-    memset(h_C, 0, size);
-
-    // Allocate vectors in device memory
-    cudaMalloc((void**)&d_A, size);
-    cudaMalloc((void**)&d_B, size);
-    cudaMalloc((void**)&d_C, size);
-
-    // Copy vectors from host memory to device memory
-    cudaMemcpy(d_A, h_A, size, cudaMemcpyHostToDevice);
-    cudaMemcpy(d_B, h_B, size, cudaMemcpyHostToDevice);
-
-
-    // int priority_hi = -1;
-    // cudaStream_t st_hi;
-    // cudaStreamCreateWithPriority(&st_hi,  cudaStreamNonBlocking, priority_hi);
-    vecMul << <64,128  >> > (d_A, d_B, d_C, numARows);
-
-
-    cudaMemcpy(h_C, d_C, size, cudaMemcpyDeviceToHost);
-
-
-    cudaFree(d_A);
-    cudaFree(d_B);
-    cudaFree(d_C);
-    free(h_A);
-    free(h_B);
-    free(h_C);
- }
 
 static void compute_mat(int stride) {
 
@@ -197,7 +150,6 @@ static void compute_mat(int stride) {
         cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
         struct timeval ts,te;  
           
-
 
 
     ///////////////////////Profiler////////////////////////////////////
@@ -346,73 +298,6 @@ static void compute_mat(int stride) {
     free(C);
 
 }
-
-
-
-
-static void compute()
-{
-    //Host variables
-	int A[N+2][N+2] = {};//+2 for padding matrix
-	int *C;
-	
-	//Device variables
-	int *A_d = 0, *C_d = 0;
-
-
-	//Calculate memory size 
-	int memorySize = (N + 2) * (N + 2);
-
-	cudaEvent_t start, stop;
-	cudaEventCreate(&start);
-	cudaEventCreate(&stop);
-
-	//Init matrix by 0
-	for (int i = 0; i < N+2; i++) {
-		for (int j = 0; j < N+2; j++) {
-			A[i][j] = 0;
-		}
-}
-
-	//Generate random values between 0 and 9
-srand(time(NULL));
-for (int i = 0; i < N; i++) {
-  for (int j = 0; j < N; j++) {
-    A[i + 1][j + 1] = rand() % 10;
-  }
-}
-
-C = (int *)malloc(sizeof(*C)*memorySize);
-
-cudaMalloc((void**)&A_d, sizeof(*A_d)*memorySize);
-cudaMalloc((void**)&C_d, sizeof(*C_d)*memorySize);
-
-//Copy from host to device
-cudaMemcpy(A_d, A, sizeof(*A_d)*memorySize, cudaMemcpyHostToDevice);
-
-// cudaEventRecord(start);
-sideChannelGenerator << <64,128 >> >(A_d, C_d);//Block-thread
-cudaDeviceSynchronize();
-// cudaEventRecord(stop);
-// cudaEventSynchronize(stop);
-
-//Copy from device to host
-cudaMemcpy(C, C_d, sizeof(*C)*memorySize, cudaMemcpyDeviceToHost);
-
-
-//Free memory
-cudaFree(C_d);
-cudaFree(A_d);
-free(C);
-}
-
-
-
-
-
-
-
-
 
 
 
