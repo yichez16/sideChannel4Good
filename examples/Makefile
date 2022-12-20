@@ -1,4 +1,4 @@
-all: conv_metrics conv_event
+all: verifier generator
 
 CUPTI_PATH=/usr/local/cuda/extras/CUPTI
 INCLUDES = -I ../include -I /usr/local/cuda/extras/CUPTI/include
