@@ -250,10 +250,80 @@ cudaMalloc((void**)&C_d, sizeof(*C_d)*memorySize);
 //Copy from host to device
 cudaMemcpy(A_d, A, sizeof(*A_d)*memorySize, cudaMemcpyHostToDevice);
 
-// cudaEventRecord(start);
-convolution << <64, 128 >> >(A_d, C_d);//Block-thread
-// cudaEventRecord(stop);
-// cudaEventSynchronize(stop);
+using namespace std;
+CUdevice device;
+
+DRIVER_API_CALL(cuInit(0));
+DRIVER_API_CALL(cuDeviceGet(&device, 0));
+
+
+#if PROFILE_ALL_EVENTS_METRICS
+const auto event_names = cupti_profiler::available_events(device);
+const auto metric_names = cupti_profiler::available_metrics(device);
+#else
+  vector<string> event_names {    
+    "fb_subp0_write_sectors",
+    "l2_subp0_read_tex_hit_sectors",
+    "tex0_cache_sector_queries",
+    "inst_executed",
+    // "inst_issued0",
+    "global_store",
+    "global_load",
+    "active_warps",
+
+    // "atom_count",
+    // "shared_load",
+    // "generic_load",
+    // "global_load",
+    // "local_load",
+    // "shared_ld_bank_conflict",
+    // "shared_ld_transactions",
+
+
+
+  };
+  vector<string> metric_names {
+
+					
+  };
+	
+#endif
+
+
+
+CUcontext context;
+cuCtxCreate(&context, 0, 0);
+cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
+struct timeval ts,te;  
+struct timeval ts2,te2;
+for (int j = 0; j < 1; j++) {
+
+	p->start();
+	gettimeofday(&ts,NULL);
+	for (int i = 0; i < 2; i++) {
+		convolution << <64, 128 >> >(A_d, C_d);//Block-thread
+
+	}
+	p->stop();
+	gettimeofday(&te,NULL);
+}
+
+cupti_profiler::profiler *p1= new cupti_profiler::profiler(event_names, metric_names, context);
+struct timeval ts1,te1;   
+for (int j = 0; j < 100000000; j++) {
+
+    p1->start();
+    gettimeofday(&ts1,NULL);
+    for (int i = 0; i < 1; i++) {
+        convolution << <64,128 >> >(A_d, C_d);//Block-thread
+
+    }
+    p1->stop();
+    gettimeofday(&te1,NULL);
+    p1->print_event_values(std::cout,ts1,te1);
+}
+
+
 
 //Copy from device to host
 cudaMemcpy(C, C_d, sizeof(*C)*memorySize, cudaMemcpyDeviceToHost);
@@ -280,282 +350,20 @@ free(C);
 
 int main()  
 {
-freopen(path_0,"w",stdout);
-
-using namespace std;
-CUdevice device;
-
-DRIVER_API_CALL(cuInit(0));
-DRIVER_API_CALL(cuDeviceGet(&device, 0));
-
-#if PROFILE_ALL_EVENTS_METRICS
-const auto event_names = cupti_profiler::available_events(device);
-const auto metric_names = cupti_profiler::available_metrics(device);
-#else
-  vector<string> event_names {    
-//     "fb_subp0_read_sectors",
-// //    "fb_subp1_read_sectors",
-//      "fb_subp0_write_sectors",
-//     // "fb_subp1_write_sectors",
-//     "l2_subp0_read_sector_misses",
-//     // "l2_subp1_read_sector_misses",
-//      "l2_subp0_write_sector_misses",
-    // "l2_subp1_write_sector_misses"
 
 
-
-  };
-  vector<string> metric_names {
-// "l2_read_transactions",// works
-//"nvlink_data_receive_efficiency",
-// "nvlink_data_transmission_efficiency",
-//"nvlink_overhead_data_received",
-//"nvlink_overhead_data_transmitted",
-//"nvlink_receive_throughput",
-// "inst_control",
-// "inst_fp_32",
-// "inst_fp_64",
-// "inst_integer",
-// "inst_executed", not work
-"inst_issued",
-//  6.x metrics
-"atomic_transactions",
-"achieved_occupancy",
-"atomic_transactions_per_request",
-"branch_efficiency",
-"cf_executed",
-"cf_issued",
-"dram_read_bytes",
-"dram_read_throughput",
-"dram_read_transactions",
-"ecc_throughput",
-"global_hit_rate",
-"global_load_requests",
-"inst_control",
-"ipc",
-"l2_global_load_bytes"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// "inst_per_warp",
-
-
-//  "nvlink_total_data_received",// works
-//  "nvlink_total_data_transmitted",// works
-//  "nvlink_total_nratom_data_transmitted" , // works
-// // "nvlink_total_ratom_data_transmitted" ,
-//  "nvlink_total_response_data_received" ,// works
-// // "nvlink_total_write_data_transmitted",
-//  "nvlink_transmit_throughput", //works
-// "nvlink_user_data_received",
-// "nvlink_user_data_transmitted",
-// "nvlink_user_nratom_data_transmitted" ,
-// "nvlink_user_ratom_data_transmitted",
-// "nvlink_user_response_data_received",
-// "nvlink_user_write_data_transmitted",
-
-// "l2_write_transactions",  // error
-// "dram_read_transactions",
-//"dram_write_transactions",
-
-                    
-  };
-
-  
-  #endif
-CUcontext context;
-cuCtxCreate(&context, 0, 0);
-
-
-for(int i=0;i<40;i++)
+for(int i=0;i<400;i++)
 {
-	for(int j=0;j<100;j++)
-	{
-	cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
-	struct timeval ts,te;
-	p->start();
-	gettimeofday(&ts,NULL);
+
 	
 	compute_mat();
-	compute_vecmul();
-	p->stop();
-	gettimeofday(&te,NULL);
 
-	// p->print_event_values(std::cout,ts,te);
-	p->print_metric_values(std::cout,ts,te);
-	// p->print_events_and_metrics(std::cout);
 
 	
-	}
-  for(int m=0;m<1;m++)
-	{
-	cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
-	struct timeval ts,te;
-	p->start();
-	gettimeofday(&ts,NULL);
-	
-	compute();
-	// compute_mat();
-	// compute_vecmul();
 
-
-	p->stop();
-	gettimeofday(&te,NULL);
-
-	// p->print_event_values(std::cout,ts,te);
-	p->print_metric_values(std::cout,ts,te);
-
-  }
-	// free(p);
 }
-
-for(int i=0;i<10;i++)
-{
-	for(int j=0;j<25;j++)
-	{
-	cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
-	struct timeval ts,te;
-	p->start();
-	gettimeofday(&ts,NULL);
-	
-	compute_mat();
-	compute_vecmul();
-	p->stop();
-	gettimeofday(&te,NULL);
-
-	// p->print_event_values(std::cout,ts,te);
-	p->print_metric_values(std::cout,ts,te);
-	// p->print_events_and_metrics(std::cout);
-
-	
-	}
-  for(int m=0;m<1;m++)
-	{
-	cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
-	struct timeval ts,te;
-	p->start();
-	gettimeofday(&ts,NULL);
-	
-	compute();
-	// compute_mat();
-	// compute_vecmul();
-
-
-	p->stop();
-	gettimeofday(&te,NULL);
-
-	// p->print_event_values(std::cout,ts,te);
-	p->print_metric_values(std::cout,ts,te);
-
-  }
-	// free(p);
-}
-
-for(int i=0;i<2;i++)
-{
-	for(int j=0;j<50;j++)
-	{
-	cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
-	struct timeval ts,te;
-	p->start();
-	gettimeofday(&ts,NULL);
-	
-	compute_mat();
-	compute_vecmul();
-	p->stop();
-	gettimeofday(&te,NULL);
-
-	// p->print_event_values(std::cout,ts,te);
-	p->print_metric_values(std::cout,ts,te);
-	// p->print_events_and_metrics(std::cout);
-
-	
-	}
-  for(int m=0;m<1;m++)
-	{
-	cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
-	struct timeval ts,te;
-	p->start();
-	gettimeofday(&ts,NULL);
-	
-	compute();
-	// compute_mat();
-	// compute_vecmul();
-
-
-	p->stop();
-	gettimeofday(&te,NULL);
-
-	// p->print_event_values(std::cout,ts,te);
-	p->print_metric_values(std::cout,ts,te);
-
-  }
-	// free(p);
-}
-
-for(int i=0;i<10;i++)
-{
-	for(int j=0;j<50;j++)
-	{
-	cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
-	struct timeval ts,te;
-	p->start();
-	gettimeofday(&ts,NULL);
-	
-	compute_mat();
-	compute_vecmul();
-	p->stop();
-	gettimeofday(&te,NULL);
-
-	// p->print_event_values(std::cout,ts,te);
-	p->print_metric_values(std::cout,ts,te);
-	// p->print_events_and_metrics(std::cout);
-
-	
-	}
-  for(int m=0;m<1;m++)
-	{
-	cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
-	struct timeval ts,te;
-	p->start();
-	gettimeofday(&ts,NULL);
-	
-	compute();
-	// compute_mat();
-	// compute_vecmul();
-
-
-	p->stop();
-	gettimeofday(&te,NULL);
-
-	// p->print_event_values(std::cout,ts,te);
-	p->print_metric_values(std::cout,ts,te);
-
-  }
-	// free(p);
-}
-
 
 
   
-fclose(stdout);
 return 0;
 }

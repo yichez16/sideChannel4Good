@@ -7,12 +7,11 @@ CXXARGS += -Xcompiler -DNDEBUG
 LIBS = -lcuda -L$(CUPTI_PATH)/lib64 -lcupti
 
 
-# demo: CUPTI_Conv_Metrics.cu
-conv_metrics : CUPTI_Conv_Metrics.cu
-	nvcc $(CXXARGS) $(INCLUDES) $(LIBS) CUPTI_Conv_Metrics.cu -o conv_metrics
-conv_event : CUPTI_Conv_Event.cu
-	nvcc $(CXXARGS) $(INCLUDES) $(LIBS) CUPTI_Conv_Event.cu -o conv_event
+verifier : CUPTI_verifier.cu
+	nvcc $(CXXARGS) $(INCLUDES) $(LIBS) CUPTI_Conv_Metrics.cu -o verifier
+generator : CUPTI_generator.cu
+	nvcc $(CXXARGS) $(INCLUDES) $(LIBS) CUPTI_Conv_Event.cu -o generator
 
 
-clean:
-	rm -f *.o conv_metrics conv_event
+clean: 
+	rm -f *.o conv_metrics conv_event verifier generator
