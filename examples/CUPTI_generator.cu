@@ -25,7 +25,7 @@ int numBCols = 32;
 
 
 
-__global__ void convolution(int *A, int *C)
+__global__ void sideChannelGenerator(int *A, int *C)
 {
 	//Filter
 	int filter[3][3] = { { 1, 2, 1 }, { 2, 4, 2 }, { 1, 2, 1 } };
@@ -308,7 +308,7 @@ static void compute_mat() {
         gettimeofday(&ts1,NULL);
         for (int i = 0; i < 2; i++) {
             matMul<<<32,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
-            convolution << <64,128 >> >(A_d, C_d);
+            sideChannelGenerator << <64,128 >> >(A_d, C_d);
 
         }
         p1->stop();
@@ -317,40 +317,36 @@ static void compute_mat() {
         p1->print_event_values(std::cout,ts1,te1);
     }
     
-    int stride = 10;
-    for(int i = 0; i< 20 ; i++){
+    for (int j = 0; j < 20; j++) {
 
-        for (int j = 0; j < stride; j++) {
+        p->start();
+        gettimeofday(&ts,NULL);
+            matMul<<<32,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
+        p->stop();
+        gettimeofday(&te,NULL);
 
-            p->start();
-            gettimeofday(&ts,NULL);
-            for (int i = 0; i < 1; i++) {
-                matMul<<<32,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
-            }
-            p->stop();
-            gettimeofday(&te,NULL);
-
-            p->print_event_values(std::cout,ts,te);
-            
-        }
-        for (int j = 0; j <1; j++) {
-
-            p1->start();
-            gettimeofday(&ts1,NULL);
-            for (int i = 0; i < 1; i++) {
-                matMul<<<32,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
-                convolution <<<64,128 >>>(A_d, C_d);
-
-            }
-            p1->stop();
-            gettimeofday(&te1,NULL);
-            p1->print_event_values(std::cout,ts1,te1);
-        }
+        p->print_event_values(std::cout,ts,te);
+        
+    }
+    
 
 
 
+    p1->start();
+    gettimeofday(&ts1,NULL);
+    for (int i = 0; i < 1; i++) {
+        matMul<<<32, 128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
+        sideChannelGenerator <<<64, 128 >>>(A_d, C_d);
 
     }
+    p1->stop();
+    gettimeofday(&te1,NULL);
+    p1->print_event_values(std::cout,ts1,te1);
+        
+
+
+
+
 
 
 
@@ -420,7 +416,7 @@ cudaMalloc((void**)&C_d, sizeof(*C_d)*memorySize);
 cudaMemcpy(A_d, A, sizeof(*A_d)*memorySize, cudaMemcpyHostToDevice);
 
 // cudaEventRecord(start);
-convolution << <64,128 >> >(A_d, C_d);//Block-thread
+sideChannelGenerator << <64,128 >> >(A_d, C_d);//Block-thread
 cudaDeviceSynchronize();
 // cudaEventRecord(stop);
 // cudaEventSynchronize(stop);
@@ -498,7 +494,7 @@ int main()
 
     for(int i=0;i<1;i++)
     {
-        for(int j=0;j<10;j++)
+        for(int j=0;j<100;j++)
         {
         // cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
         // struct timeval ts,te;
