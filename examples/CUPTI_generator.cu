@@ -325,7 +325,7 @@ int main(int argc, char **argv)
     char y[5];
 
     printf("Please enter the frequency of impulses.\n");
-    scanf("%", &stride);
+    scanf("%d", &stride);
     printf("Verbose or not?\n");
     scanf("%s", &y);
 
