@@ -320,13 +320,43 @@ static void compute_mat(int stride) {
 int main()  
 {
     int stride;
-    printf("Please enter the frequency of impulses.\n");
-    scanf("%d", &stride);
+    bool Verbose;
+    int temp;
+    char y[5];
 
-    for(int j=0;j<30;j++)
-    {
-        compute_mat(stride);
+    printf("Please enter the frequency of impulses.\n");
+    scanf("%", &stride);
+    printf("Verbose or not?\n")
+    scanf("%s", &y);
+
+    if(strcmp(y, "True") == 0){
+        temp = 1;
     }
+
+    else if(strcmp(y, "False") == 0){
+        temp = 0;
+    }
+
+    Verbose = temp;
+
+
+
+
+    if(Verbose){
+        for(int j=0;j<30;j++)
+        {
+            compute_mat(stride);
+        }
+    }
+    else if{
+        freopen(path_0,"w",stdout);
+        for(int j=0;j<30;j++)
+        {
+            compute_mat(stride);
+        }
+        fclose(stdout);
+    }
+
         
     return 0;
 }
