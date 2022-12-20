@@ -326,7 +326,7 @@ int main()
 
     printf("Please enter the frequency of impulses.\n");
     scanf("%", &stride);
-    printf("Verbose or not?\n")
+    printf("Verbose or not?\n");
     scanf("%s", &y);
 
     if(strcmp(y, "True") == 0){
