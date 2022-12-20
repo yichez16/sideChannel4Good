@@ -350,7 +350,7 @@ int main(int argc, char **argv)
     }
     else{
         freopen(path_0,"w",stdout);
-        for(int j=0;j<30;j++)
+        for(int j=0;j<5;j++)
         {
             compute_mat(stride);
         }
