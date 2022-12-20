@@ -9,7 +9,7 @@
 #include <stdio.h>
 
 #define PROFILE_ALL_EVENTS_METRICS 0
-int counter1 = 10;
+int counter1 = 1;
 
 int numARows = 64;
 int numACols = 64;
