@@ -298,7 +298,7 @@ static void compute_mat(int stride) {
 
     cupti_profiler::profiler *p1= new cupti_profiler::profiler(event_names, metric_names, context);
     struct timeval ts1,te1;   
-    frequency = 100000/stride
+    frequency = 100000/stride;
     for (int j = 0; j < frequency; j++) {
 
         p->start();
@@ -428,7 +428,6 @@ int main()
     for(int j=0;j<30;j++)
     {
         compute_mat(stride);
-    
     }
         
     return 0;
