@@ -8,9 +8,9 @@ LIBS = -lcuda -L$(CUPTI_PATH)/lib64 -lcupti
 
 
 verifier : CUPTI_verifier.cu
-	nvcc $(CXXARGS) $(INCLUDES) $(LIBS) CUPTI_Conv_Metrics.cu -o verifier
+	nvcc $(CXXARGS) $(INCLUDES) $(LIBS) CUPTI_verifier.cu -o verifier
 generator : CUPTI_generator.cu
-	nvcc $(CXXARGS) $(INCLUDES) $(LIBS) CUPTI_Conv_Event.cu -o generator
+	nvcc $(CXXARGS) $(INCLUDES) $(LIBS) CUPTI_generator.cu -o generator
 
 
 clean: 
