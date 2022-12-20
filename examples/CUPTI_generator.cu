@@ -149,9 +149,59 @@ static void compute_vecmul()
 
 static void compute_mat() {
 
-    // cudaEvent_t start, stop;
-    // cudaEventCreate(&start);
-    // cudaEventCreate(&stop);
+        ////////////////////////////Profiler//////////////////////////////////////////
+
+        using namespace std;
+        CUdevice device;
+        
+        DRIVER_API_CALL(cuInit(0));
+        DRIVER_API_CALL(cuDeviceGet(&device, 0));
+        
+        
+        #if PROFILE_ALL_EVENTS_METRICS
+        const auto event_names = cupti_profiler::available_events(device);
+        const auto metric_names = cupti_profiler::available_metrics(device);
+        #else
+          vector<string> event_names {    
+            // "fb_subp0_write_sectors",
+            // "l2_subp0_read_tex_hit_sectors",
+            // "tex0_cache_sector_queries",
+            // "inst_executed",
+            // // "inst_issued0",
+            // "global_store",
+            // "global_load",
+            "active_warps",
+        
+            // "atom_count",
+            // "shared_load",
+            // "generic_load",
+            // "global_load",
+            // "local_load",
+            // "shared_ld_bank_conflict",
+            // "shared_ld_transactions",
+        
+        
+        
+          };
+          vector<string> metric_names {
+        
+                            
+          };
+          
+          #endif
+        
+        
+        
+        CUcontext context;
+        cuCtxCreate(&context, 0, 0);
+        cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
+        struct timeval ts,te;  
+          
+
+
+
+    ///////////////////////Profiler////////////////////////////////////
+    
 
     size_t sizeA = numARows * numACols * sizeof(float);
     size_t sizeB = numACols * numBCols * sizeof(float);
@@ -205,6 +255,12 @@ static void compute_mat() {
     float* d_A;
     float* d_B;
     float* d_C;
+
+
+    
+    p->start();
+    gettimeofday(&ts,NULL);
+
     cudaMalloc((void**)&d_A, sizeA);
     cudaMalloc((void**)&d_B, sizeB);
     cudaMalloc((void**)&d_C, sizeC);
@@ -212,158 +268,97 @@ static void compute_mat() {
 
     cudaMalloc((void**)&A_d, sizeof(*A_d)*memorySize);
     cudaMalloc((void**)&C_d, sizeof(*C_d)*memorySize);
+    p->stop();
+    gettimeofday(&te,NULL);
 
-    // transfer to GPU
+    p->print_event_values(std::cout,ts,te);
+
+    /////////////// transfer to GPU/////////////////////////////
+
+
+    p->start();
+    gettimeofday(&ts,NULL);
     cudaMemcpy(d_A, h_A, sizeA, cudaMemcpyHostToDevice);
     cudaMemcpy(d_B, h_B, sizeB, cudaMemcpyHostToDevice);
 
 
     cudaMemcpy(A_d, A, sizeof(*A_d)*memorySize, cudaMemcpyHostToDevice);
 
-    // kernel launch 300 iterations
-    for(int i = 0 ; i< 300; i++){
-    matMul<<<32,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
-    convolution <<<64,128 >>>(A_d, C_d);
+    p->stop();
+    gettimeofday(&te,NULL);
+
+    p->print_event_values(std::cout,ts,te);
+
+
+    // kernel launch 
     
+
+    for (int j = 0; j < 10; j++) {
+
+        p->start();
+        gettimeofday(&ts,NULL);
+        for (int i = 0; i < 2; i++) {
+            matMul<<<32,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
+        }
+        p->stop();
+        gettimeofday(&te,NULL);
+
+        p->print_event_values(std::cout,ts,te);
+
     }
-    // dim3 threadPerBlock(BLOCK_SIZE, BLOCK_SIZE, 1);
-    // dim3 blockPerGrid(ceil(numBCols/(float)BLOCK_SIZE), ceil(numACols/(float)BLOCK_SIZE), 1);
 
 
-    // cudaEventRecord(start);
-    ////////////////////////////Profiler
+    cupti_profiler::profiler *p1= new cupti_profiler::profiler(event_names, metric_names, context);
+    struct timeval ts1,te1;   
+    for (int j = 0; j < 10; j++) {
 
-    // using namespace std;
-    // CUdevice device;
+        p1->start();
+        gettimeofday(&ts1,NULL);
+        for (int i = 0; i < 2; i++) {
+            matMul<<<32,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
+            convolution << <64,128 >> >(A_d, C_d);
+
+        }
+        p1->stop();
+        gettimeofday(&te1,NULL);
+
+        p1->print_event_values(std::cout,ts1,te1);
+    }
     
-    // DRIVER_API_CALL(cuInit(0));
-    // DRIVER_API_CALL(cuDeviceGet(&device, 0));
-    
-    
-    // #if PROFILE_ALL_EVENTS_METRICS
-    // const auto event_names = cupti_profiler::available_events(device);
-    // const auto metric_names = cupti_profiler::available_metrics(device);
-    // #else
-    //   vector<string> event_names {    
-    //     "fb_subp0_write_sectors",
-    //     "l2_subp0_read_tex_hit_sectors",
-    //     "tex0_cache_sector_queries",
-    //     "inst_executed",
-    //     // "inst_issued0",
-    //     "global_store",
-    //     "global_load",
-    //     "active_warps",
-    
-    //     // "atom_count",
-    //     // "shared_load",
-    //     // "generic_load",
-    //     // "global_load",
-    //     // "local_load",
-    //     // "shared_ld_bank_conflict",
-    //     // "shared_ld_transactions",
-    
-    
-    
-    //   };
-    //   vector<string> metric_names {
-    
-                        
-    //   };
-      
-    //   #endif
-    
-    
-    
-    // CUcontext context;
-    // cuCtxCreate(&context, 0, 0);
-    // cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
-    // struct timeval ts,te;  
-    // struct timeval ts2,te2;  
+    int stride = 10;
+    for(int i = 0; i< 20 ; i++){
 
+        for (int j = 0; j < stride; j++) {
 
+            p->start();
+            gettimeofday(&ts,NULL);
+            for (int i = 0; i < 1; i++) {
+                matMul<<<32,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
+            }
+            p->stop();
+            gettimeofday(&te,NULL);
 
-     
-
-    // for (int j = 0; j < 1; j++) {
-
-    //     p->start();
-    //     gettimeofday(&ts,NULL);
-    //     for (int i = 0; i < 2; i++) {
-    //         matMul<<<32,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
-    //     }
-    //     p->stop();
-    //     gettimeofday(&te,NULL);
-
-    //     // p->print_event_values(std::cout,ts,te);
-    //     // p->print_metric_values(std::cout,ts,te);
-    //     // p->print_events_and_metrics(std::cout);
-    // }
-
-
-    // cupti_profiler::profiler *p1= new cupti_profiler::profiler(event_names, metric_names, context);
-    // struct timeval ts1,te1;   
-    // for (int j = 0; j < 100; j++) {
-
-    //     p1->start();
-    //     gettimeofday(&ts1,NULL);
-    //     for (int i = 0; i < 2; i++) {
-    //         matMul<<<32,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
-    //         convolution << <64,128 >> >(A_d, C_d);//Block-thread
-
-    //     }
-    //     p1->stop();
-    //     gettimeofday(&te1,NULL);
-
-    //     p1->print_event_values(std::cout,ts1,te1);
-    // }
-    
-    // for (int countertest = 20; countertest < 30; countertest+=20){
-    // // gettimeofday(&ts2,NULL); 
-    // int x1 =0;
-    // for(int i = 0; i< 20 ; i++){
-
-    //     // gettimeofday(&ts,NULL);
-    //     for (int j = 0; j < countertest; j++) {
-
-    //         p->start();
-    //         gettimeofday(&ts,NULL);
-    //         for (int i = 0; i < 1; i++) {
-    //             matMul<<<32,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
-    //         }
-    //         p->stop();
-    //         gettimeofday(&te,NULL);
-
-    //         p->print_event_values(std::cout,ts,te);
+            p->print_event_values(std::cout,ts,te);
             
-    //     }
-    //     // gettimeofday(&te,NULL);
-    //     // x1 += (te.tv_sec - ts.tv_sec)*1000000 + te.tv_usec - ts.tv_usec;
-    //     for (int j = 0; j <1; j++) {
+        }
+        for (int j = 0; j <1; j++) {
 
-    //         p1->start();
-    //         gettimeofday(&ts1,NULL);
-    //         for (int i = 0; i < 1; i++) {
-    //             matMul<<<32,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
-    //             convolution <<<64,128 >>>(A_d, C_d);
+            p1->start();
+            gettimeofday(&ts1,NULL);
+            for (int i = 0; i < 1; i++) {
+                matMul<<<32,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
+                convolution <<<64,128 >>>(A_d, C_d);
 
-    //         }
-    //         p1->stop();
-    //         gettimeofday(&te1,NULL);
-    //         p1->print_event_values(std::cout,ts1,te1);
-    //     }
-    // }
-    // gettimeofday(&te2,NULL); 
-    // cout << ((te2.tv_sec - ts2.tv_sec)*1000000 + te2.tv_usec - ts2.tv_usec)
-    //     << ","
-    //     << x1;
-        // << ","
-        // << "Frequency: " << 1000/((te2.tv_sec - ts2.tv_sec)+ (te2.tv_usec - ts2.tv_usec)/1000000);
-    // float overhead1 =  ((te2.tv_sec - ts2.tv_sec)*1000000 + te2.tv_usec - ts2.tv_usec)/(1000*(((te.tv_sec - ts.tv_sec)*1000000 + te.tv_usec - ts.tv_usec)));   
-    // printf( "\n" );
+            }
+            p1->stop();
+            gettimeofday(&te1,NULL);
+            p1->print_event_values(std::cout,ts1,te1);
+        }
 
 
 
-    // }
+
+    }
 
 
 
@@ -374,11 +369,9 @@ static void compute_mat() {
 
 
     ////////////////////////////Profiler
-    // matMul<<<8,8>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
-    // cudaEventRecord(stop);
-    // cudaEventSynchronize(stop);
 
-
+    p->start();
+    gettimeofday(&ts,NULL);
     cudaMemcpy(h_C, d_C, sizeC, cudaMemcpyDeviceToHost);
 
     cudaMemcpy(C, C_d, sizeof(*C)*memorySize, cudaMemcpyDeviceToHost);
@@ -388,6 +381,10 @@ static void compute_mat() {
     cudaFree(C_d);
     cudaFree(A_d);
     free(C);
+    p->stop();
+    gettimeofday(&te,NULL);
+
+    p->print_event_values(std::cout,ts,te);
 
 }
 

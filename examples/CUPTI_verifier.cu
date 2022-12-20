@@ -262,13 +262,13 @@ const auto event_names = cupti_profiler::available_events(device);
 const auto metric_names = cupti_profiler::available_metrics(device);
 #else
   vector<string> event_names {    
-    "fb_subp0_write_sectors",
-    "l2_subp0_read_tex_hit_sectors",
-    "tex0_cache_sector_queries",
-    "inst_executed",
+    // "fb_subp0_write_sectors",
+    // "l2_subp0_read_tex_hit_sectors",
+    // "tex0_cache_sector_queries",
+    // "inst_executed",
     // "inst_issued0",
-    "global_store",
-    "global_load",
+    // "global_store",
+    // "global_load",
     "active_warps",
 
     // "atom_count",
