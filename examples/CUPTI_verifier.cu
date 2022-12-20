@@ -356,7 +356,7 @@ for(int i=0;i<400;i++)
 {
 
 	
-	compute_mat();
+	compute();
 
 
 	
