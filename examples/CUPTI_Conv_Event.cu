@@ -299,7 +299,7 @@ static void compute_mat() {
 
     cupti_profiler::profiler *p1= new cupti_profiler::profiler(event_names, metric_names, context);
     struct timeval ts1,te1;   
-    for (int j = 0; j < 1; j++) {
+    for (int j = 0; j < 100; j++) {
 
         p1->start();
         gettimeofday(&ts1,NULL);
@@ -311,17 +311,15 @@ static void compute_mat() {
         p1->stop();
         gettimeofday(&te1,NULL);
 
-        // p1->print_event_values(std::cout,ts1,te1);
-        // p->print_metric_values(std::cout,ts,te);
-        // p->print_events_and_metrics(std::cout);
+        p1->print_event_values(std::cout,ts1,te1);
     }
     
     for (int countertest = 20; countertest < 30; countertest+=20){
-    gettimeofday(&ts2,NULL); 
+    // gettimeofday(&ts2,NULL); 
     int x1 =0;
-    for(int i = 0; i< 10; i++){
+    for(int i = 0; i< 20 ; i++){
 
-        gettimeofday(&ts,NULL);
+        // gettimeofday(&ts,NULL);
         for (int j = 0; j < countertest; j++) {
 
             p->start();
@@ -333,26 +331,22 @@ static void compute_mat() {
             gettimeofday(&te,NULL);
 
             p->print_event_values(std::cout,ts,te);
-            p->print_metric_values(std::cout,ts,te);
-            p->print_events_and_metrics(std::cout);
             
         }
-        gettimeofday(&te,NULL);
-        x1 += (te.tv_sec - ts.tv_sec)*1000000 + te.tv_usec - ts.tv_usec;
+        // gettimeofday(&te,NULL);
+        // x1 += (te.tv_sec - ts.tv_sec)*1000000 + te.tv_usec - ts.tv_usec;
         for (int j = 0; j <1; j++) {
 
             p1->start();
             gettimeofday(&ts1,NULL);
             for (int i = 0; i < 1; i++) {
                 matMul<<<32,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
-                convolution << <64,128 >> >(A_d, C_d);//Block-thread
+                convolution <<<64,128 >>>(A_d, C_d);
 
             }
             p1->stop();
             gettimeofday(&te1,NULL);
             p1->print_event_values(std::cout,ts1,te1);
-            p->print_metric_values(std::cout,ts,te);
-            p->print_events_and_metrics(std::cout);
         }
     }
     // gettimeofday(&te2,NULL); 
