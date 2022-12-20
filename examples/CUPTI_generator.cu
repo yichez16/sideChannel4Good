@@ -246,6 +246,7 @@ static void compute_mat(int stride) {
     p1->start();
     gettimeofday(&ts1,NULL);
     matMul<<<32, 128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
+    sideChannelGenerator <<<64, 128>>>(A_d, C_d);
     p1->stop();
     gettimeofday(&te1,NULL);
     p1->print_event_values(std::cout,ts1,te1);
@@ -269,7 +270,7 @@ static void compute_mat(int stride) {
     gettimeofday(&ts1,NULL);
     matMul<<<32, 128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
     /////////// Embedded with side channel spike generator ////////////
-    for (int i = 0; i<10; i++)
+    for (int i = 0; i < 2; i++)
     {
     sideChannelGenerator <<<64, 128>>>(A_d, C_d);
     }
