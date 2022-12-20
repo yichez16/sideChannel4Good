@@ -93,7 +93,7 @@ vecMul(const int *A, const int *B, int *C, int numElements)
 
 
 
-static void compute_mat(int stride) {
+static void compute_mat(int stride, int Verbose) {
 
     ////////////////////////////Profiler//////////////////////////////////////////
 
@@ -269,7 +269,9 @@ static void compute_mat(int stride) {
         cudaStream_t stream0, stream1;
         cudaStreamCreate(&stream0);
         cudaStreamCreate(&stream1);
-        printf("--------------------Spike------------------------\n");
+        if(Verbose){
+            printf("--------------------Spike------------------------\n");
+        }
         p1->start();
         gettimeofday(&ts1,NULL);
         matMul<<<32, 128,  0, stream0>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
@@ -281,8 +283,9 @@ static void compute_mat(int stride) {
         p1->stop();
         gettimeofday(&te1,NULL);
         p1->print_event_values(std::cout,ts1,te1);
-        printf("--------------------Spike------------------------\n");
-
+        if(Verbose){
+            printf("--------------------Spike------------------------\n");
+        }
         cudaStreamDestroy(stream0);
         cudaStreamDestroy(stream1);
 
@@ -347,7 +350,7 @@ int main(int argc, char **argv)
     if(Verbose){
         for(int j=0;j<2;j++)
         {
-            compute_mat(stride);
+            compute_mat(stride, Verbose);
         }
     }
     else{
@@ -355,7 +358,7 @@ int main(int argc, char **argv)
         freopen(path_0,"w",stdout);
         for(int j=0;j<5;j++)
         {
-            compute_mat(stride);
+            compute_mat(stride, Verbose);
         }
         fclose(stdout);
     }
