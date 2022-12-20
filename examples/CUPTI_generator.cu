@@ -251,6 +251,9 @@ static void compute_mat(int stride) {
     for(int i = 0; i < stride; i++){
 
 
+
+        
+
         int frequency = 100000/stride;
 
         for (int j = 0; j < frequency; j++) {
@@ -266,7 +269,7 @@ static void compute_mat(int stride) {
         cudaStream_t stream0, stream1;
         cudaStreamCreate(&stream0);
         cudaStreamCreate(&stream1);
-
+        printf("--------------------Spike------------------------\n");
         p1->start();
         gettimeofday(&ts1,NULL);
         matMul<<<32, 128,  0, stream0>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
