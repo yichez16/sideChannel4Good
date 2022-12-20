@@ -282,8 +282,8 @@ static void compute_mat(int stride) {
     gettimeofday(&te1,NULL);
     p1->print_event_values(std::cout,ts1,te1);
 
-    cudaStreamDestroy(streams0);
-    cudaStreamDestroy(streams1);
+    cudaStreamDestroy(stream0);
+    cudaStreamDestroy(stream1);
 
         
 
