@@ -91,13 +91,6 @@ vecMul(const int *A, const int *B, int *C, int numElements)
     }
 }
 
-static void
-initVec(int *vec, int n)
-{
-    for (int i = 0; i < n; i++)
-        vec[i] = i;
-}
-
 
 
 static void compute_mat(int stride) {
@@ -250,7 +243,7 @@ static void compute_mat(int stride) {
 
     cupti_profiler::profiler *p1= new cupti_profiler::profiler(event_names, metric_names, context);
     struct timeval ts1,te1;   
-    frequency = 100000/stride;
+    int frequency = 100000/stride;
     for (int j = 0; j < frequency; j++) {
 
         p->start();
