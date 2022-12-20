@@ -252,7 +252,7 @@ static void compute_mat(int stride) {
 
 
 
-        
+
 
         int frequency = 100000/stride;
 
@@ -345,7 +345,7 @@ int main(int argc, char **argv)
 
 
     if(Verbose){
-        for(int j=0;j<30;j++)
+        for(int j=0;j<2;j++)
         {
             compute_mat(stride);
         }
