@@ -269,7 +269,10 @@ static void compute_mat(int stride) {
     gettimeofday(&ts1,NULL);
     matMul<<<32, 128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
     /////////// Embedded with side channel spike generator ////////////
+    for (int i = 0; i<10; i++)
+    {
     sideChannelGenerator <<<64, 128>>>(A_d, C_d);
+    }
     /////////// Embedded with side channel spike generator ////////////
     p1->stop();
     gettimeofday(&te1,NULL);
