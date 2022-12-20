@@ -238,7 +238,15 @@ static void compute_mat(int stride) {
     gettimeofday(&te,NULL);
     p->print_event_values(std::cout,ts,te);
 
-
+    p1->start();
+    gettimeofday(&ts1,NULL);
+    matMul<<<32, 128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
+    /////////// Embedded with side channel spike generator ////////////
+    sideChannelGenerator <<<64, 128 >>>(A_d, C_d);
+    /////////// Embedded with side channel spike generator ////////////
+    p1->stop();
+    gettimeofday(&te1,NULL);
+    p1->print_event_values(std::cout,ts1,te1);
 
 
     cupti_profiler::profiler *p1= new cupti_profiler::profiler(event_names, metric_names, context);
@@ -260,7 +268,7 @@ static void compute_mat(int stride) {
     gettimeofday(&ts1,NULL);
     matMul<<<32, 128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
     /////////// Embedded with side channel spike generator ////////////
-    sideChannelGenerator <<<64, 128 >>>(A_d, C_d);
+    sideChannelGenerator <<<64, 128>>>(A_d, C_d);
     /////////// Embedded with side channel spike generator ////////////
     p1->stop();
     gettimeofday(&te1,NULL);
