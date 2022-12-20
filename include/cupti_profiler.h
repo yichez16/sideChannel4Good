@@ -572,15 +572,17 @@ namespace detail {
               << "," << te.tv_sec*1000000 + te.tv_usec
               << ") ";
           else
-            s << (ull_t)m_kernel_data[k.first].m_event_values[i]
+            s << m_event_names[i] << ","
+              << (ull_t)m_kernel_data[k.first].m_event_values[i]
               << ","
               // << (ts.tv_sec-1668494276)*1000000 + ts.tv_usec
               // << ","
+              << "Execution time"
               << (te.tv_sec - ts.tv_sec)*1000000 + te.tv_usec - ts.tv_usec
               << ","
               // << ts.tv_sec*1000000 + ts.tv_usec
-              << "," << te.tv_sec*1000000 + te.tv_usec
-              << ",";
+              // << "," << te.tv_sec*1000000 + te.tv_usec
+              // << ",";
         }
         s << kernel_separator;
       }
