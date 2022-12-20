@@ -316,7 +316,7 @@ static void compute_mat() {
         // p->print_events_and_metrics(std::cout);
     }
     
-    for (int countertest = 20; countertest < 5000; countertest+=20){
+    for (int countertest = 20; countertest < 30; countertest+=20){
     gettimeofday(&ts2,NULL); 
     int x1 =0;
     for(int i = 0; i< 10; i++){
