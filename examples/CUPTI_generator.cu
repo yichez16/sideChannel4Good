@@ -250,7 +250,7 @@ static void compute_mat(int stride) {
 
     for(int i = 0; i < stride; i++){
 
-        
+
         int frequency = 100000/stride;
 
         for (int j = 0; j < frequency; j++) {
@@ -278,6 +278,7 @@ static void compute_mat(int stride) {
         p1->stop();
         gettimeofday(&te1,NULL);
         p1->print_event_values(std::cout,ts1,te1);
+        printf("--------------------Spike------------------------\n");
 
         cudaStreamDestroy(stream0);
         cudaStreamDestroy(stream1);
