@@ -348,7 +348,7 @@ int main()
             compute_mat(stride);
         }
     }
-    else if{
+    else{
         freopen(path_0,"w",stdout);
         for(int j=0;j<30;j++)
         {
