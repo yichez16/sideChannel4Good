@@ -1,0 +1,6 @@
+==42020== NVPROF is profiling process 42020, command: ./test
+==42020== Profiling application: ./test
+==42020== Profiling result:
+==42020== Event result:
+"Device","Kernel","Invocations","Event Name","Min","Max","Avg","Total"
+"Tesla P100-SXM2-16GB (0)","matMul(float*, float*, float*, int, int, int)",10,"active_warps (56 instances)",,,9586,0,2676,0,0,0,2743,0,0,0,2695,0,2601,0,0,0,2667,0,0,0,2581,0,2488,0,0,0,2555,0,0,0,2703,0,2664,0,0,0,0,0,2775,0,2682,0,0,0,2748,0,0,0,2627,0,0,0,2587,0,0,0,
