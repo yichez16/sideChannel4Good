@@ -296,6 +296,18 @@ static void compute_mat(int stride, int Verbose) {
 
 
 
+    for(int iter = 0; iter < 10; iter++){
+        p->start();
+        gettimeofday(&ts,NULL);
+        matMul<<<32,128>>>(d_A, d_B, d_C, numARows, numACols, numBCols);
+        p->stop();
+        gettimeofday(&te,NULL);
+        p->print_event_values(std::cout,ts,te);
+    }
+
+
+
+
 
 
 
