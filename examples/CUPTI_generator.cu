@@ -239,7 +239,9 @@ static void compute_mat(int stride, int Verbose) {
     gettimeofday(&te1,NULL);
     p1->print_event_values(std::cout,ts1,te1);
 
-
+    cudaStream_t stream0, stream1;
+    cudaStreamCreate(&stream0);
+    cudaStreamCreate(&stream1);
     cupti_profiler::profiler *p= new cupti_profiler::profiler(event_names, metric_names, context);
     struct timeval ts,te;  
     p->start();
@@ -268,9 +270,7 @@ static void compute_mat(int stride, int Verbose) {
             p->print_event_values(std::cout,ts,te);
             
         }
-        cudaStream_t stream0, stream1;
-        cudaStreamCreate(&stream0);
-        cudaStreamCreate(&stream1);
+
         if(Verbose){
             printf("--------------------Spike------------------------\n");
         }
@@ -288,8 +288,7 @@ static void compute_mat(int stride, int Verbose) {
         if(Verbose){
             printf("--------------------Spike------------------------\n");
         }
-        cudaStreamDestroy(stream0);
-        cudaStreamDestroy(stream1);
+
 
         
     }
@@ -309,11 +308,12 @@ static void compute_mat(int stride, int Verbose) {
 
 
 
+    cudaStreamDestroy(stream0);
+    cudaStreamDestroy(stream1);
 
 
 
 
-    
 
     for(int iter = 0; iter < 100; iter++){
         p->start();
